@@ -16,6 +16,9 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- Tailwind Config for Custom Colors matching reference design -->
     <script>
         tailwind.config = {
@@ -188,8 +191,8 @@
             <!-- Official Store Logo Showcase (Circular Style) in Hero Section -->
             <div class="flex justify-center mb-4 relative z-10">
                 <div class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full shadow-[0_6px_25px_rgba(255,77,141,0.5)] bg-white/90 backdrop-blur flex items-center justify-center overflow-hidden border-4 border-white z-10 p-2 transform hover:scale-105 transition duration-300">
-                    <img id="cv-logoImage" src="IMG_9710.jpg" alt="SUGAR GAMING Logo" class="w-full h-full object-cover rounded-full">
-                    <span id="cv-logoText" class="text-5xl hidden">🍬</span>
+                    <img id="cv-logoImage" src="" alt="SUGAR GAMING Logo" class="w-full h-full object-cover rounded-full hidden">
+                    <span id="cv-logoText" class="text-5xl">🍬</span>
                 </div>
             </div>
             
@@ -214,7 +217,7 @@
 
             <!-- Notices -->
             <div id="cv-notices" class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-xl p-3 text-sm max-w-2xl mx-auto text-left shadow-sm">
-                <!-- Injected via JS -->
+                <p class="text-center text-gray-500"><i class="fas fa-spinner fa-spin mr-1"></i> กำลังโหลดประกาศ...</p>
             </div>
         </section>
 
@@ -224,7 +227,7 @@
                 <i class="fas fa-gamepad text-sugar-500"></i> เลือกบริการ
             </h3>
             <div id="cv-categories" class="flex overflow-x-auto hide-scroll gap-2 pb-4 mb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-                <!-- Injected via JS -->
+                <p class="text-gray-500 text-sm">กำลังโหลดหมวดหมู่...</p>
             </div>
 
             <!-- Game Grid -->
@@ -248,7 +251,7 @@
                         <h4 class="font-bold text-gray-800">โอนผ่านธนาคาร (QR Code)</h4>
                         <img id="cv-qrImage" src="" alt="QR Code" class="w-48 h-48 mx-auto my-3 rounded-lg shadow border border-gray-100 object-cover">
                         <p class="text-sm text-gray-500">ชื่อบัญชี</p>
-                        <p id="cv-bankName" class="font-bold text-sugar-600 text-lg"></p>
+                        <p id="cv-bankName" class="font-bold text-sugar-600 text-lg">-</p>
                     </div>
 
                     <!-- TrueWallet -->
@@ -258,7 +261,7 @@
                         </div>
                         <h4 class="font-bold text-gray-800">TrueMoney Wallet</h4>
                         <p class="text-sm text-gray-500 mt-4">ชื่อบัญชี</p>
-                        <p id="cv-walletName" class="font-bold text-sugar-600 text-lg"></p>
+                        <p id="cv-walletName" class="font-bold text-sugar-600 text-lg">-</p>
                         <div class="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-100">
                             <p class="text-sm text-orange-800">⚠️ เบอร์ TrueWallet มีการเปลี่ยนแปลงบ่อย <br>กรุณาสอบถามแอดมินทาง LINE ก่อนโอนทุกครั้ง</p>
                         </div>
@@ -271,7 +274,7 @@
                         <i class="fas fa-exclamation-triangle"></i> แจ้งเตือนลูกค้าทุกท่าน
                     </h4>
                     <ul id="cv-warnings" class="list-none space-y-2 text-sm text-gray-700">
-                        <!-- Injected via JS -->
+                        <li class="text-gray-500">กำลังโหลดข้อควรระวัง...</li>
                     </ul>
                 </div>
             </section>
@@ -281,7 +284,7 @@
             <p class="font-bold text-lg mb-1">🍬 SUGAR GAMING</p>
             <p class="text-sm opacity-90">เติมเกมง่าย • รวดเร็ว • เปิดให้บริการทุกวัน</p>
             
-            <!-- Hidden Admin Login Button (Double Click to open) -->
+            <!-- Hidden Admin Login Button -->
             <button onclick="toggleAdminLogin()" class="absolute bottom-2 right-2 opacity-20 hover:opacity-100 text-xs">
                 <i class="fas fa-cog"></i> Admin
             </button>
@@ -323,19 +326,23 @@
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
+    <!-- Admin Login Modal (Supabase Auth) -->
     <div id="adminLoginModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-60 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-sm p-6 modal-enter text-center">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">เข้าสู่ระบบหลังบ้าน</h3>
-            <p class="text-sm text-gray-500 mb-4">รหัสผ่านสำหรับทดสอบคือ: admin</p>
-            <input type="password" id="adminPassword" placeholder="รหัสผ่าน" class="w-full border p-3 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-sugar-500">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">เข้าสู่ระบบหลังบ้าน</h3>
+            <p class="text-xs text-gray-500 mb-4">ใช้อีเมลและรหัสผ่านบัญชี Admin ใน Supabase Auth</p>
+            
+            <div id="loginErrorMsg" class="hidden mb-3 p-2 bg-red-100 text-red-700 text-xs rounded-lg"></div>
+
+            <input type="email" id="adminEmail" placeholder="อีเมลแอดมิน" class="w-full border p-3 rounded-xl mb-3 focus:outline-none focus:ring-2 focus:ring-sugar-500 text-sm">
+            <input type="password" id="adminPassword" placeholder="รหัสผ่าน" class="w-full border p-3 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-sugar-500 text-sm">
+            
             <div class="flex gap-2">
-                <button onclick="closeModal('adminLoginModal')" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl font-bold">ยกเลิก</button>
-                <button onclick="handleLogin()" class="flex-1 bg-sugar-500 text-white py-2 rounded-xl font-bold">เข้าสู่ระบบ</button>
+                <button onclick="closeModal('adminLoginModal')" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl font-bold text-sm">ยกเลิก</button>
+                <button onclick="handleSupabaseLogin()" id="btnLoginSubmit" class="flex-1 bg-sugar-500 text-white py-2 rounded-xl font-bold text-sm">เข้าสู่ระบบ</button>
             </div>
         </div>
     </div>
-
 
     <!-- ==================== ADMIN VIEW ==================== -->
     <div id="adminView" class="hidden flex-grow flex flex-col w-full max-w-6xl mx-auto bg-gray-100 min-h-screen">
@@ -378,8 +385,6 @@
 
                 <!-- TAB 1: Store Info -->
                 <div id="content-info" class="admin-content block space-y-6">
-                    
-                    <!-- Section: Logo Upload -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-sugar-400"></div>
                         <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
@@ -392,7 +397,7 @@
                                 <input type="file" id="adm-logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             </div>
                             <div class="flex flex-col gap-2">
-                                <p class="text-sm text-gray-500">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่<br>(แนะนำรูปภาพสัดส่วนสี่เหลี่ยมจัตุรัส)</p>
+                                <p class="text-sm text-gray-500">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่</p>
                                 <button onclick="removeLogo()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-100 w-fit font-bold transition">
                                     <i class="fas fa-trash"></i> ลบรูปโลโก้
                                 </button>
@@ -400,7 +405,6 @@
                         </div>
                     </div>
 
-                    <!-- Section: General Info -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-blue-400"></div>
                         <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
@@ -409,24 +413,23 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อร้าน</label>
-                                <input type="text" id="adm-storeName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <input type="text" id="adm-storeName" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">คำโปรย / สโลแกน (ใต้โลโก้)</label>
-                                <input type="text" id="adm-tagline" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">คำโปรย / สโลแกน</label>
+                                <input type="text" id="adm-tagline" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">เวลาทำการ</label>
-                                <input type="text" id="adm-hours" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <input type="text" id="adm-hours" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ระยะเวลาดำเนินการต่อคิว</label>
-                                <input type="text" id="adm-duration" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <input type="text" id="adm-duration" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Section: Contact Links -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-green-400"></div>
                         <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
@@ -434,23 +437,22 @@
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">LINE ID (เช่น @701mqrzf)</label>
-                                <input type="text" id="adm-lineId" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">LINE ID</label>
+                                <input type="text" id="adm-lineId" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">LINE Link (URL)</label>
-                                <input type="text" id="adm-lineLink" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <input type="text" id="adm-lineLink" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Google Drive Link (ดูเรทราคาทั้งหมด)</label>
-                                <input type="text" id="adm-driveLink" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Google Drive Link</label>
+                                <input type="text" id="adm-driveLink" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Save Button Area -->
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-end">
-                        <button onclick="saveStoreInfo()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                        <button onclick="saveStoreInfo(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
                             <i class="fas fa-save mr-2"></i> บันทึกข้อมูลร้านค้า
                         </button>
                     </div>
@@ -466,16 +468,13 @@
                             </button>
                         </div>
 
-                        <!-- Filter -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">กรองตามหมวดหมู่</label>
                             <select id="adm-gameFilter" onchange="renderAdminGamesList()" class="w-full sm:w-64 border border-gray-300 rounded-lg p-2 bg-white">
                                 <option value="all">ทั้งหมด</option>
-                                <!-- Injected via JS -->
                             </select>
                         </div>
 
-                        <!-- Games List Table -->
                         <div class="overflow-x-auto rounded-lg border border-gray-200">
                             <table class="w-full text-left border-collapse">
                                 <thead>
@@ -489,7 +488,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="adm-gamesListBody" class="text-sm bg-white">
-                                    <!-- Injected via JS -->
+                                    <tr><td colspan="6" class="text-center p-4 text-gray-500">กำลังโหลดข้อมูล...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -498,7 +497,6 @@
 
                 <!-- TAB 3: Payment -->
                 <div id="content-payment" class="admin-content hidden space-y-6">
-                    <!-- Bank Form -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
                         <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
@@ -508,19 +506,13 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อบัญชี</label>
-                                <input type="text" id="adm-bankName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition mb-4">
-                                <p class="text-sm text-gray-500 bg-blue-50 p-3 rounded-lg border border-blue-100">
-                                    <i class="fas fa-info-circle text-blue-500"></i> ลูกค้าจะสแกน QR Code นี้เพื่อชำระเงิน กรุณาตรวจสอบให้แน่ใจว่าอัปโหลดรูปที่ชัดเจน
-                                </p>
+                                <input type="text" id="adm-bankName" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white mb-4">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">รูปภาพ QR Code รับเงิน</label>
                                 <div class="flex items-start gap-4">
-                                    <div class="w-40 h-40 border-2 border-dashed border-blue-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden relative group cursor-pointer hover:bg-blue-50 transition">
+                                    <div class="w-40 h-40 border-2 border-dashed border-blue-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden relative group cursor-pointer">
                                         <img id="adm-qrPreview" src="" class="w-full h-full object-cover">
-                                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                            <span class="text-white text-sm font-bold"><i class="fas fa-upload"></i> เปลี่ยนรูป</span>
-                                        </div>
                                         <input type="file" id="adm-qrInput" accept="image/*" onchange="handleImageUpload(event, 'adm-qrPreview')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                     </div>
                                 </div>
@@ -528,26 +520,21 @@
                         </div>
                     </div>
 
-                    <!-- TrueWallet Form -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
                         <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-wallet text-orange-500"></i> ทรูมันนี่ วอลเล็ท (TrueMoney Wallet)
+                            <i class="fas fa-wallet text-orange-500"></i> ทรูมันนี่ วอลเล็ท
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อบัญชี</label>
-                                <input type="text" id="adm-walletName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-orange-500 focus:border-orange-500 bg-gray-50 focus:bg-white transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ (ถ้าต้องการแสดง)</label>
-                                <input type="text" id="adm-walletPhone" placeholder="ปล่อยว่างหากไม่ต้องการให้โชว์เบอร์" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-orange-500 focus:border-orange-500 bg-gray-50 focus:bg-white transition">
+                                <input type="text" id="adm-walletName" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white">
                             </div>
                         </div>
                     </div>
                     
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-end">
-                        <button onclick="savePaymentInfo()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                        <button onclick="savePaymentInfo(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
                             <i class="fas fa-save mr-2"></i> บันทึกข้อมูลการชำระเงิน
                         </button>
                     </div>
@@ -555,49 +542,32 @@
 
                 <!-- TAB 4: Notices & Warnings -->
                 <div id="content-notices" class="admin-content hidden space-y-6">
-                    
-                    <!-- General Notices -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>
                         <h2 class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-thumbtack text-yellow-500"></i> ประกาศร้าน (แสดงหน้าแรก)
+                            <i class="fas fa-thumbtack text-yellow-500"></i> ประกาศร้าน
                         </h2>
-                        <p class="text-sm text-gray-500 mb-4">ข้อความที่แสดงในกรอบสีเหลืองหน้าแรกของเว็บไซต์</p>
-                        
-                        <div id="adm-noticesList" class="space-y-3 mb-4">
-                            <!-- JS Injected -->
-                        </div>
-                        
+                        <div id="adm-noticesList" class="space-y-3 mb-4"></div>
                         <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                            <input type="text" id="newNoticeInput" placeholder="พิมพ์ประกาศใหม่ที่นี่..." class="flex-grow border-none bg-transparent focus:ring-0 px-2 py-1">
-                            <button onclick="addListItem('notices', 'newNoticeInput')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-bold transition">
-                                <i class="fas fa-plus mr-1"></i> เพิ่ม
-                            </button>
+                            <input type="text" id="newNoticeInput" placeholder="พิมพ์ประกาศใหม่..." class="flex-grow border-none bg-transparent px-2 py-1 text-sm">
+                            <button onclick="addListItem('notices', 'newNoticeInput')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-bold text-sm">เพิ่ม</button>
                         </div>
                     </div>
 
-                    <!-- Warnings -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                         <h2 class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-exclamation-triangle text-red-500"></i> ข้อควรระวัง (แสดงก่อนชำระเงิน)
+                            <i class="fas fa-exclamation-triangle text-red-500"></i> ข้อควรระวัง
                         </h2>
-                        <p class="text-sm text-gray-500 mb-4">ข้อความแจ้งเตือนสีแดงด้านล่างสุดของหน้าเว็บ เพื่อป้องกันการโอนผิด</p>
-                        
-                        <div id="adm-warningsList" class="space-y-3 mb-4">
-                            <!-- JS Injected -->
-                        </div>
-                        
+                        <div id="adm-warningsList" class="space-y-3 mb-4"></div>
                         <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                            <input type="text" id="newWarningInput" placeholder="พิมพ์ข้อควรระวังใหม่ที่นี่..." class="flex-grow border-none bg-transparent focus:ring-0 px-2 py-1">
-                            <button onclick="addListItem('warnings', 'newWarningInput')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-bold transition">
-                                <i class="fas fa-plus mr-1"></i> เพิ่ม
-                            </button>
+                            <input type="text" id="newWarningInput" placeholder="พิมพ์ข้อควรระวังใหม่..." class="flex-grow border-none bg-transparent px-2 py-1 text-sm">
+                            <button onclick="addListItem('warnings', 'newWarningInput')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-sm">เพิ่ม</button>
                         </div>
                     </div>
                     
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-end">
-                         <button onclick="saveNotices()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                         <button onclick="saveNotices(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
                             <i class="fas fa-save mr-2"></i> บันทึกประกาศทั้งหมด
                         </button>
                     </div>
@@ -619,172 +589,159 @@
                 <input type="hidden" id="editGameId">
                 <input type="hidden" id="editGameCustomIcon" value="">
                 
-                <!-- Game Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">ชื่อเกม/บริการ</label>
-                        <input type="text" id="editGameName" class="w-full border rounded-lg p-2 focus:ring-sugar-500">
+                        <input type="text" id="editGameName" class="w-full border rounded-lg p-2 bg-white">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">หมวดหมู่</label>
-                        <select id="editGameCategory" class="w-full border rounded-lg p-2 focus:ring-sugar-500">
-                            <!-- JS Injected -->
-                        </select>
+                        <select id="editGameCategory" class="w-full border rounded-lg p-2 bg-white"></select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Emoji (หากไม่ใช้รูปภาพ)</label>
-                        <input type="text" id="editGameIcon" class="w-full border rounded-lg p-2" maxlength="5">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Emoji</label>
+                        <input type="text" id="editGameIcon" class="w-full border rounded-lg p-2 bg-white" maxlength="5">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">สถานะ</label>
-                        <select id="editGameStatus" class="w-full border rounded-lg p-2">
+                        <select id="editGameStatus" class="w-full border rounded-lg p-2 bg-white">
                             <option value="open">เปิดรับ (Open)</option>
                             <option value="closed">ปิดรับ (Closed)</option>
                         </select>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">หรืออัปโหลดรูปโลโก้เกม (ขนาดสี่เหลี่ยมจัตุรัส)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">อัปโหลดรูปโลโก้เกม</label>
                         <div class="flex items-center gap-4">
-                            <div class="w-16 h-16 border-2 border-dashed rounded-xl flex items-center justify-center bg-white overflow-hidden relative group">
+                            <div class="w-16 h-16 border-2 border-dashed rounded-xl flex items-center justify-center bg-white overflow-hidden relative">
                                 <img id="adm-gameIconPreview" src="" class="w-full h-full object-cover hidden">
                                 <span id="adm-gameIconPlaceholder" class="text-2xl">🎮</span>
                                 <input type="file" id="adm-gameIconInput" accept="image/*" onchange="handleGameIconUpload(event)" class="absolute inset-0 opacity-0 cursor-pointer">
                             </div>
-                            <button type="button" onclick="removeGameIcon()" class="text-xs bg-red-50 text-red-600 border px-3 py-1.5 rounded-lg font-bold">ลบรูปโลโก้เกม</button>
+                            <button type="button" onclick="removeGameIcon()" class="text-xs bg-red-50 text-red-600 border px-3 py-1.5 rounded-lg font-bold">ลบรูปโลโก้</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Packages Manager -->
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="font-bold text-gray-800 text-lg">จัดการราคาแพ็กเกจ</h4>
-                        <button onclick="addEmptyPackageRow()" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-200"><i class="fas fa-plus"></i> เพิ่มแถว</button>
+                        <button onclick="addPackageRow('', '', '')" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-lg"><i class="fas fa-plus"></i> เพิ่มแถว</button>
                     </div>
-                    
                     <div class="bg-white border rounded-lg overflow-hidden">
                         <table class="w-full text-left text-sm">
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="p-2 w-10 text-center">#</th>
-                                    <th class="p-2">ชื่อแพ็กเกจ (เช่น 100 เพชร)</th>
+                                    <th class="p-2">ชื่อแพ็กเกจ</th>
                                     <th class="p-2 w-32">ราคา (บาท)</th>
                                     <th class="p-2 w-16 text-center">ลบ</th>
                                 </tr>
                             </thead>
-                            <tbody id="admPackagesBody">
-                                <!-- JS Injected inputs -->
-                            </tbody>
+                            <tbody id="admPackagesBody"></tbody>
                         </table>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">* หากช่องชื่อแพ็กเกจว่างเปล่า จะไม่ถูกบันทึก</p>
                 </div>
             </div>
             
             <div class="p-4 bg-gray-100 border-t flex justify-between rounded-b-2xl">
-                <button onclick="deleteCurrentGame()" id="btnDeleteGame" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-200 transition">
+                <button onclick="deleteCurrentGame(this)" id="btnDeleteGame" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-200">
                     <i class="fas fa-trash"></i> ลบเกมนี้
                 </button>
                 <div class="flex gap-2">
                     <button onclick="closeModal('admGameModal')" class="bg-white border px-4 py-2 rounded-lg font-bold text-gray-700">ยกเลิก</button>
-                    <button onclick="saveGameData()" class="bg-sugar-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-sugar-600 shadow">บันทึก</button>
+                    <button onclick="saveGameData(this)" class="bg-sugar-500 text-white px-6 py-2 rounded-lg font-bold shadow">บันทึก</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. DEFAULT DATA (Used if localStorage is empty) ---
-        const defaultData = {
-            storeInfo: {
-                logoImage: "IMG_9710.jpg",
-                name: "SUGAR GAMING",
-                tagline: "บริการเติมเกมออนไลน์",
-                lineId: "@701mqrzf",
-                lineLink: "https://lin.ee/u7SBLec",
-                driveLink: "https://drive.google.com/drive/folders/1-BeAnlGfbBWkcWJ9mZ4EfTKxLBJFC3gt?usp=drive_link",
-                hours: "เปิดให้บริการทุกวัน",
-                duration: "ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว",
-            },
-            categories: [
-                { id: 'uid', name: '🎮 เติมด้วย UID', note: 'แจ้ง UID เกม พร้อมรายการ' },
-                { id: 'mailpass', name: '🔐 Mail & Password', note: 'แจ้ง Email / Password' },
-                { id: 'shop', name: '🍎 ฝากร้านดำเนินการ', note: 'ฝากร้านดำเนินการ' },
-                { id: 'novel', name: '📚 เติมเหรียญนิยาย', note: 'ระบบ Mail & Password' },
-                { id: 'extra', name: '✨ บริการเพิ่มเติม', note: 'แจ้งรายละเอียดกับแอดมิน' }
-            ],
-            games: [
-                // UID Category
-                { id: 'g1', categoryId: 'uid', name: 'Free Fire', icon: '🔥', status: 'open', packages: [{id: 'p1', name: '100 เพชร', price: 29}, {id: 'p2', name: '310 เพชร', price: 89}] },
-                { id: 'g2', categoryId: 'uid', name: 'ROV', icon: '⚔️', status: 'open', packages: [{id: 'p3', name: '90 คูปอง', price: 29}, {id: 'p4', name: '300 คูปอง', price: 95}] },
-                { id: 'g3', categoryId: 'uid', name: 'FC Mobile', icon: '⚽', status: 'open', packages: [{id: 'p5', name: '100 FC Points', price: 35}] },
-                { id: 'g4', categoryId: 'uid', name: 'Valorant', icon: '🔫', status: 'open', packages: [{id: 'p6', name: '1000 VP', price: 300}] },
-                { id: 'g5', categoryId: 'uid', name: 'Genshin Impact', icon: '✨', status: 'open', packages: [{id: 'p7', name: 'พรแห่งดวงจันทร์', price: 150}] },
-                
-                // Mail & Pass Category
-                { id: 'g6', categoryId: 'mailpass', name: 'Roblox', icon: '🧱', status: 'open', packages: [{id: 'p8', name: '400 Robux', price: 150}] },
-                { id: 'g7', categoryId: 'mailpass', name: 'Voice Online', icon: '🎤', status: 'closed', packages: [] },
-                { id: 'g8', categoryId: 'mailpass', name: 'Discord Nitro', icon: '💬', status: 'open', packages: [{id: 'p9', name: 'Nitro Basic 1 เดือน', price: 99}] },
-                
-                // Shop Process
-                { id: 'g9', categoryId: 'shop', name: 'eFootball', icon: '⚽', status: 'open', packages: [{id: 'p10', name: 'เปิดแพ็ค', price: 50}] },
-                
-                // Novel
-                { id: 'g10', categoryId: 'novel', name: 'Webtoon', icon: '📖', status: 'open', packages: [{id: 'p11', name: '100 Coin', price: 35}] },
-                { id: 'g11', categoryId: 'novel', name: 'ReadAWrite', icon: '📖', status: 'open', packages: [{id: 'p12', name: '50 Coin', price: 50}] },
-                
-                // Extra
-                { id: 'g12', categoryId: 'extra', name: 'ส่งของขวัญสติ๊กเกอร์ LINE', icon: '🎁', status: 'open', packages: [{id: 'p13', name: '50 เหรียญ', price: 25}] },
-            ],
-            payments: {
-                bank: { name: 'เติมเกมกับเพจ Sugar Gaming – บริการเติมเกม', qrImage: '9880_2.jpg' },
-                truewallet: { name: 'ฑิฑัมพร', phone: '' }
-            },
-            notices: [
-                "ช่วงกิจกรรมหรือมีคิวจำนวนมาก อาจใช้เวลานานกว่าปกติ",
-                "เรทราคาอาจมีการเปลี่ยนแปลงขึ้นลงตามกลไกตลาด"
-            ],
-            warnings: [
-                "ตรวจสอบบัญชีร้านก่อนโอนทุกครั้ง",
-                "เฟซจริงมีเครื่องหมายยืนยันตัวตน",
-                "ทางร้านไม่รับผิดชอบทุกกรณีหากโอนผิด",
-                "ไม่รับกลาง ไม่รับแลกเงิน ไม่รับฝากซื้อ-ขายไอดี ไม่รับยืมเงิน"
-            ]
-        };
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://dmcyolyfnrxbgtmoigvp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtY3lvbHlmbnJ4Ymd0bW9pZ3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NjY1NDUsImV4cCI6MjEwNzA0MjU0NX0.OV1beaJ_4b9AZEWXSlFjOmdbh7yx9QYgbZ1E6ZOPPms';
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // State variables
-        let appData = {};
-        let isAdminView = false;
+        // App State
+        let appData = {
+            storeInfo: {},
+            categories: [],
+            games: [],
+            payments: { bank: {}, truewallet: {} },
+            notices: [],
+            warnings: []
+        };
         let activeCategory = 'uid';
         let currentEditGameId = null;
 
-        // --- 2. INITIALIZATION & STORAGE ---
-        function initApp() {
-            const savedData = localStorage.getItem('sugarGamingData');
-            if (savedData) {
-                try {
-                    appData = JSON.parse(savedData);
-                } catch(e) {
-                    appData = JSON.parse(JSON.stringify(defaultData));
+        // --- FETCH DATA FROM SUPABASE ---
+        async function fetchAppData() {
+            try {
+                // 1. Store Info
+                const { data: storeData } = await supabaseClient.from('store_info').select('*').limit(1);
+                if (storeData && storeData.length > 0) {
+                    const s = storeData[0];
+                    appData.storeInfo = {
+                        name: s.name,
+                        tagline: s.tagline,
+                        lineId: s.line_id,
+                        lineLink: s.line_link,
+                        driveLink: s.drive_link,
+                        hours: s.hours,
+                        duration: s.duration,
+                        logoImage: s.logo_image || ''
+                    };
                 }
-            } else {
-                appData = JSON.parse(JSON.stringify(defaultData));
-                saveToLocalStorage();
+
+                // 2. Categories
+                const { data: catData } = await supabaseClient.from('categories').select('*').order('sort_order', {ascending: true});
+                if (catData) {
+                    appData.categories = catData.map(c => ({ id: c.id, name: c.name, note: c.note }));
+                }
+
+                // 3. Games & Packages
+                const { data: gameData } = await supabaseClient.from('games').select('*, packages(*)').order('sort_order', {ascending: true});
+                if (gameData) {
+                    appData.games = gameData.map(g => ({
+                        id: g.id,
+                        categoryId: g.category_id,
+                        name: g.name,
+                        icon: g.icon,
+                        customIcon: g.custom_icon || '',
+                        status: g.status,
+                        packages: (g.packages || []).map(p => ({ id: p.id, name: p.name, price: p.price }))
+                    }));
+                }
+
+                // 4. Payments
+                const { data: payData } = await supabaseClient.from('payments').select('*');
+                if (payData) {
+                    const bank = payData.find(p => p.type === 'bank') || { name: '', qr_image: '' };
+                    const tw = payData.find(p => p.type === 'truewallet') || { name: '', phone: '' };
+                    appData.payments = {
+                        bank: { name: bank.name, qrImage: bank.qr_image },
+                        truewallet: { name: tw.name, phone: tw.phone }
+                    };
+                }
+
+                // 5. Notices & Warnings
+                const { data: noticeData } = await supabaseClient.from('notices_warnings').select('*').order('sort_order', {ascending: true});
+                if (noticeData) {
+                    appData.notices = noticeData.filter(n => n.type === 'notice').map(n => n.content);
+                    appData.warnings = noticeData.filter(n => n.type === 'warning').map(n => n.content);
+                }
+
+                renderCustomerView();
+            } catch (err) {
+                console.error('Error fetching data from Supabase:', err);
+                document.getElementById('cv-notices').innerHTML = `<p class="text-red-600">เกิดข้อผิดพลาดในการโหลดข้อมูลจากฐานข้อมูล</p>`;
             }
-
-            renderCustomerView();
         }
 
-        function saveToLocalStorage() {
-            localStorage.setItem('sugarGamingData', JSON.stringify(appData));
-        }
-
-
-        // --- 3. CUSTOMER VIEW RENDERING ---
+        // --- CUSTOMER VIEW RENDERING ---
         function renderCustomerView() {
             const info = appData.storeInfo;
             
-            // Header & Hero Logo
             if (info.logoImage) {
                 document.getElementById('cv-logoImage').src = info.logoImage;
                 document.getElementById('cv-logoImage').classList.remove('hidden');
@@ -795,53 +752,66 @@
             }
             
             document.getElementById('cv-storeName').innerHTML = `
-                ${info.name}
+                ${info.name || 'SUGAR GAMING'}
                 <span class="relative flex h-2.5 w-2.5 ml-1">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75" style="animation-duration: 1.5s;"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300 shadow-[0_0_6px_#fff]"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300"></span>
                 </span>
             `;
             
-            document.getElementById('cv-tagline').innerText = info.tagline;
-            document.getElementById('cv-hours').innerText = `${info.hours} | ${info.duration}`;
+            document.getElementById('cv-tagline').innerText = info.tagline || '';
+            document.getElementById('cv-hours').innerText = `${info.hours || ''} | ${info.duration || ''}`;
             
             const lineBtn = document.getElementById('cv-lineBtn');
-            lineBtn.href = info.lineLink;
+            lineBtn.href = info.lineLink || '#';
             lineBtn.innerHTML = `
-                <i class="fab fa-line text-xl"></i> ทักแชท LINE (${info.lineId})
-                <span class="relative flex h-2 w-2 ml-1">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" style="animation-duration: 1.2s;"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
+                <i class="fab fa-line text-xl"></i> ทักแชท LINE (${info.lineId || ''})
             `;
             
-            document.getElementById('cv-driveBtn').href = info.driveLink;
+            document.getElementById('cv-driveBtn').href = info.driveLink || '#';
 
             // Notices
-            const noticesHtml = appData.notices.map(n => `<p><i class="fas fa-thumbtack text-yellow-600 mr-2"></i>${n}</p>`).join('');
-            document.getElementById('cv-notices').innerHTML = noticesHtml;
+            const noticeEl = document.getElementById('cv-notices');
+            if (appData.notices.length === 0) {
+                noticeEl.innerHTML = `<p class="text-gray-500 text-center">ไม่มีประกาศในขณะนี้</p>`;
+            } else {
+                noticeEl.innerHTML = appData.notices.map(n => `<p><i class="fas fa-thumbtack text-yellow-600 mr-2"></i>${n}</p>`).join('');
+            }
 
             // Categories
             const catContainer = document.getElementById('cv-categories');
-            catContainer.innerHTML = appData.categories.map(cat => `
-                <button onclick="setActiveCategory('${cat.id}')" 
-                        class="flex-shrink-0 px-4 py-2 rounded-full font-semibold transition ${cat.id === activeCategory ? 'bg-sugar-500 text-white shadow-md' : 'bg-white border text-gray-600 hover:bg-sugar-50'}">
-                    ${cat.name}
-                </button>
-            `).join('');
+            if (appData.categories.length === 0) {
+                catContainer.innerHTML = `<p class="text-gray-500">ไม่มีหมวดหมู่บริการ</p>`;
+            } else {
+                if(!appData.categories.some(c => c.id === activeCategory) && appData.categories.length > 0) {
+                    activeCategory = appData.categories[0].id;
+                }
+                catContainer.innerHTML = appData.categories.map(cat => `
+                    <button onclick="setActiveCategory('${cat.id}')" 
+                            class="flex-shrink-0 px-4 py-2 rounded-full font-semibold transition ${cat.id === activeCategory ? 'bg-sugar-500 text-white shadow-md' : 'bg-white border text-gray-600 hover:bg-sugar-50'}">
+                        ${cat.name}
+                    </button>
+                `).join('');
+            }
 
-            // Games Grid
             renderGamesGrid();
 
             // Payments & Warnings
-            document.getElementById('cv-bankName').innerText = appData.payments.bank.name;
-            document.getElementById('cv-qrImage').src = appData.payments.bank.qrImage;
+            document.getElementById('cv-bankName').innerText = appData.payments.bank.name || '-';
+            if (appData.payments.bank.qrImage) {
+                document.getElementById('cv-qrImage').src = appData.payments.bank.qrImage;
+            }
             
-            document.getElementById('cv-walletName').innerText = appData.payments.truewallet.name;
+            document.getElementById('cv-walletName').innerText = appData.payments.truewallet.name || '-';
             
-            document.getElementById('cv-warnings').innerHTML = appData.warnings.map(w => `
-                <li class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-0.5"></i> <span>${w}</span></li>
-            `).join('');
+            const warningEl = document.getElementById('cv-warnings');
+            if (appData.warnings.length === 0) {
+                warningEl.innerHTML = `<li>ไม่มีข้อควรระวัง</li>`;
+            } else {
+                warningEl.innerHTML = appData.warnings.map(w => `
+                    <li class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-0.5"></i> <span>${w}</span></li>
+                `).join('');
+            }
         }
 
         function setActiveCategory(catId) {
@@ -860,21 +830,18 @@
 
             grid.innerHTML = games.map(game => {
                 const isClosed = game.status === 'closed';
-                
                 const lightHtml = isClosed 
-                    ? `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_6px_#ef4444]"></span></span>`
-                    : `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_6px_#22c55e]"></span></span>`;
+                    ? `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span>`
+                    : `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>`;
 
                 const iconHtml = game.customIcon 
                     ? `<img src="${game.customIcon}" alt="${game.name}" class="w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-2xl object-cover shadow mb-2">`
-                    : `<div class="text-4xl sm:text-5xl mb-2 drop-shadow-sm">${game.icon}</div>`;
+                    : `<div class="text-4xl sm:text-5xl mb-2 drop-shadow-sm">${game.icon || '🎮'}</div>`;
 
                 return `
                 <div onclick="${isClosed ? '' : `openGameModal('${game.id}')`}" 
                      class="bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-4 text-center border shadow-sm transition ${isClosed ? 'opacity-75 cursor-not-allowed grayscale-[30%]' : 'hover:shadow-md hover:border-sugar-300 cursor-pointer transform hover:-translate-y-1 relative'}">
-                    
                     ${isClosed ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-xl flex items-center gap-1.5 shadow-sm">${lightHtml} ปิดรับ</div>` : ''}
-                    
                     ${iconHtml}
                     <div class="text-xs sm:text-sm font-bold text-gray-800 leading-tight flex items-center justify-center gap-1.5">
                         ${!isClosed ? lightHtml : ''} ${game.name}
@@ -889,9 +856,6 @@
             if(!game) return;
             
             const isClosed = game.status === 'closed';
-            const modalLightHtml = isClosed
-                ? `<span class="relative flex h-3 w-3 ml-1"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-400 shadow-[0_0_8px_#fff]"></span></span>`
-                : `<span class="relative flex h-3 w-3 ml-1"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-400 shadow-[0_0_8px_#fff]"></span></span>`;
 
             if (game.customIcon) {
                 document.getElementById('modalIcon').classList.add('hidden');
@@ -901,11 +865,11 @@
             } else {
                 document.getElementById('modalIconImg').classList.add('hidden');
                 const spanEl = document.getElementById('modalIcon');
-                spanEl.innerText = game.icon;
+                spanEl.innerText = game.icon || '🎮';
                 spanEl.classList.remove('hidden');
             }
 
-            document.getElementById('modalGameName').innerHTML = `${game.name} ${modalLightHtml}`;
+            document.getElementById('modalGameName').innerText = game.name;
             document.getElementById('modalReqType').innerText = category ? category.note : '';
             
             const warningEl = document.getElementById('modalStatusWarning');
@@ -921,7 +885,7 @@
                 orderBtn.href = appData.storeInfo.lineLink;
             }
 
-            if(game.packages.length === 0) {
+            if(!game.packages || game.packages.length === 0) {
                 listEl.innerHTML = `<p class="text-center text-gray-500 py-4">ยังไม่มีแพ็กเกจราคา</p>`;
             } else {
                 listEl.innerHTML = game.packages.map(pkg => `
@@ -935,36 +899,71 @@
             document.getElementById('gameModal').classList.remove('hidden');
         }
 
-        // --- 4. ADMIN DASHBOARD LOGIC ---
+        // --- ADMIN AUTH & SESSION CHECK ---
         function toggleAdminLogin() {
-            if(isAdminView) {
-                logoutAdmin();
-            } else {
-                document.getElementById('adminPassword').value = '';
-                document.getElementById('adminLoginModal').classList.remove('hidden');
-            }
+            document.getElementById('adminEmail').value = '';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('loginErrorMsg').classList.add('hidden');
+            document.getElementById('adminLoginModal').classList.remove('hidden');
         }
 
-        function handleLogin() {
-            const pass = document.getElementById('adminPassword').value;
-            if(pass === 'admin') {
+        async function handleSupabaseLogin() {
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            const errEl = document.getElementById('loginErrorMsg');
+            const btn = document.getElementById('btnLoginSubmit');
+
+            if (!email || !password) {
+                errEl.innerText = 'กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน';
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = 'กำลังตรวจสอบ...';
+
+            try {
+                // 1. Sign in with Supabase Auth
+                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (authError || !authData.user) {
+                    throw new Error(authError?.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+                }
+
+                // 2. Check is_admin() function
+                const { data: isAdmin, error: rpcError } = await supabaseClient.rpc('is_admin');
+                
+                if (rpcError || !isAdmin) {
+                    await supabaseClient.auth.signOut();
+                    throw new Error('บัญชีนี้ไม่มีสิทธิ์เข้าถึงระบบหลังบ้าน (Admin Only)');
+                }
+
+                // Success
                 closeModal('adminLoginModal');
-                isAdminView = true;
                 document.getElementById('customerView').classList.add('hidden');
-                document.getElementById('adminView').classList.remove('hidden');
-                document.getElementById('adminView').classList.add('flex');
+                const adminView = document.getElementById('adminView');
+                adminView.classList.remove('hidden');
+                adminView.classList.add('flex');
                 initAdminDashboard();
-            } else {
-                alert('รหัสผ่านไม่ถูกต้อง (ใช้คำว่า admin)');
+
+            } catch (err) {
+                errEl.innerText = err.message;
+                errEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'เข้าสู่ระบบ';
             }
         }
 
-        function logoutAdmin() {
-            isAdminView = false;
+        async function logoutAdmin() {
+            await supabaseClient.auth.signOut();
             document.getElementById('adminView').classList.add('hidden');
             document.getElementById('adminView').classList.remove('flex');
             document.getElementById('customerView').classList.remove('hidden');
-            renderCustomerView();
+            fetchAppData();
             window.scrollTo(0,0);
         }
 
@@ -987,7 +986,6 @@
 
         function initAdminDashboard() {
             switchAdminTab('info');
-            
             const info = appData.storeInfo;
             
             if (info.logoImage) {
@@ -999,13 +997,13 @@
                 document.getElementById('adm-logoPlaceholder').classList.remove('hidden');
             }
 
-            document.getElementById('adm-storeName').value = info.name;
-            document.getElementById('adm-tagline').value = info.tagline;
-            document.getElementById('adm-lineId').value = info.lineId;
-            document.getElementById('adm-lineLink').value = info.lineLink;
-            document.getElementById('adm-driveLink').value = info.driveLink;
-            document.getElementById('adm-hours').value = info.hours;
-            document.getElementById('adm-duration').value = info.duration;
+            document.getElementById('adm-storeName').value = info.name || '';
+            document.getElementById('adm-tagline').value = info.tagline || '';
+            document.getElementById('adm-lineId').value = info.lineId || '';
+            document.getElementById('adm-lineLink').value = info.lineLink || '';
+            document.getElementById('adm-driveLink').value = info.driveLink || '';
+            document.getElementById('adm-hours').value = info.hours || '';
+            document.getElementById('adm-duration').value = info.duration || '';
 
             const filter = document.getElementById('adm-gameFilter');
             filter.innerHTML = `<option value="all">ทั้งหมด</option>` + 
@@ -1014,10 +1012,11 @@
             document.getElementById('editGameCategory').innerHTML = 
                 appData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-            document.getElementById('adm-bankName').value = appData.payments.bank.name;
-            document.getElementById('adm-qrPreview').src = appData.payments.bank.qrImage;
-            document.getElementById('adm-walletName').value = appData.payments.truewallet.name;
-            document.getElementById('adm-walletPhone').value = appData.payments.truewallet.phone || '';
+            document.getElementById('adm-bankName').value = appData.payments.bank.name || '';
+            if(appData.payments.bank.qrImage) {
+                document.getElementById('adm-qrPreview').src = appData.payments.bank.qrImage;
+            }
+            document.getElementById('adm-walletName').value = appData.payments.truewallet.name || '';
 
             renderAdminGamesList();
             renderAdminLists('notices');
@@ -1033,102 +1032,108 @@
             }, 3000);
         }
 
-        // --- ADMIN: Logo Handling ---
+        // --- ADMIN: Save Store Info ---
         function handleLogoUpload(event) {
             const file = event.target.files[0];
             if(!file) return;
-            
             const reader = new FileReader();
             reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    const dataUrl = canvas.toDataURL('image/png', 0.9);
-                    
-                    document.getElementById('adm-logoPreview').src = dataUrl;
-                    document.getElementById('adm-logoPreview').classList.remove('hidden');
-                    document.getElementById('adm-logoPlaceholder').classList.add('hidden');
-                    
-                    appData.storeInfo.logoImage = dataUrl;
-                };
-                img.src = e.target.result;
+                appData.storeInfo.logoImage = e.target.result;
+                document.getElementById('adm-logoPreview').src = e.target.result;
+                document.getElementById('adm-logoPreview').classList.remove('hidden');
+                document.getElementById('adm-logoPlaceholder').classList.add('hidden');
             };
             reader.readAsDataURL(file);
         }
 
         function removeLogo() {
             appData.storeInfo.logoImage = "";
-            document.getElementById('adm-logoPreview').src = "";
             document.getElementById('adm-logoPreview').classList.add('hidden');
             document.getElementById('adm-logoPlaceholder').classList.remove('hidden');
-            document.getElementById('adm-logoInput').value = "";
         }
 
-        // --- ADMIN: Save Info ---
-        function saveStoreInfo() {
-            appData.storeInfo.name = document.getElementById('adm-storeName').value;
-            appData.storeInfo.tagline = document.getElementById('adm-tagline').value;
-            appData.storeInfo.lineId = document.getElementById('adm-lineId').value;
-            appData.storeInfo.lineLink = document.getElementById('adm-lineLink').value;
-            appData.storeInfo.driveLink = document.getElementById('adm-driveLink').value;
-            appData.storeInfo.hours = document.getElementById('adm-hours').value;
-            appData.storeInfo.duration = document.getElementById('adm-duration').value;
-            saveToLocalStorage();
-            showToast('บันทึกข้อมูลร้านค้าแล้ว');
+        async function saveStoreInfo(btn) {
+            btn.disabled = true;
+            try {
+                const infoData = {
+                    name: document.getElementById('adm-storeName').value,
+                    tagline: document.getElementById('adm-tagline').value,
+                    line_id: document.getElementById('adm-lineId').value,
+                    line_link: document.getElementById('adm-lineLink').value,
+                    drive_link: document.getElementById('adm-driveLink').value,
+                    hours: document.getElementById('adm-hours').value,
+                    duration: document.getElementById('adm-duration').value,
+                    logo_image: appData.storeInfo.logoImage
+                };
+
+                const { data: existing } = await supabaseClient.from('store_info').select('id').limit(1);
+                if (existing && existing.length > 0) {
+                    await supabaseClient.from('store_info').update(infoData).eq('id', existing[0].id);
+                } else {
+                    await supabaseClient.from('store_info').insert([infoData]);
+                }
+
+                await fetchAppData();
+                showToast('บันทึกข้อมูลร้านค้าลง Supabase แล้ว');
+            } catch (err) {
+                alert('เกิดข้อผิดพลาดในการบันทึก: ' + err.message);
+            } finally {
+                btn.disabled = false;
+            }
         }
 
-        // --- ADMIN: Payment Handling ---
+        // --- ADMIN: Payment ---
         function handleImageUpload(event, previewId) {
             const file = event.target.files[0];
             if(!file) return;
-            
             const reader = new FileReader();
             reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 600;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                    document.getElementById(previewId).src = dataUrl;
-                    
-                    appData.payments.bank.qrImage = dataUrl;
-                };
-                img.src = e.target.result;
+                appData.payments.bank.qrImage = e.target.result;
+                document.getElementById(previewId).src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        function savePaymentInfo() {
-            appData.payments.bank.name = document.getElementById('adm-bankName').value;
-            appData.payments.truewallet.name = document.getElementById('adm-walletName').value;
-            appData.payments.truewallet.phone = document.getElementById('adm-walletPhone').value;
-            saveToLocalStorage();
-            showToast('บันทึกข้อมูลการชำระเงินแล้ว');
+        async function savePaymentInfo(btn) {
+            btn.disabled = true;
+            try {
+                const bankName = document.getElementById('adm-bankName').value;
+                const qrImg = appData.payments.bank.qrImage;
+                const twName = document.getElementById('adm-walletName').value;
+
+                // Update or Insert Bank
+                const { data: bankRows } = await supabaseClient.from('payments').select('id').eq('type', 'bank');
+                if (bankRows && bankRows.length > 0) {
+                    await supabaseClient.from('payments').update({ name: bankName, qr_image: qrImg }).eq('id', bankRows[0].id);
+                } else {
+                    await supabaseClient.from('payments').insert([{ type: 'bank', name: bankName, qr_image: qrImg }]);
+                }
+
+                // Update or Insert Wallet
+                const { data: twRows } = await supabaseClient.from('payments').select('id').eq('type', 'truewallet');
+                if (twRows && twRows.length > 0) {
+                    await supabaseClient.from('payments').update({ name: twName }).eq('id', twRows[0].id);
+                } else {
+                    await supabaseClient.from('payments').insert([{ type: 'truewallet', name: twName }]);
+                }
+
+                await fetchAppData();
+                showToast('บันทึกข้อมูลการชำระเงินแล้ว');
+            } catch (err) {
+                alert('เกิดข้อผิดพลาด: ' + err.message);
+            } finally {
+                btn.disabled = false;
+            }
         }
 
-        // --- ADMIN: Lists (Notices & Warnings) ---
+        // --- ADMIN: Notices ---
         function renderAdminLists(type) {
             const container = document.getElementById(`adm-${type}List`);
             const dataList = appData[type];
             if (!container) return;
             container.innerHTML = dataList.map((item, index) => `
-                <div class="flex justify-between items-center bg-gray-50 border p-2 rounded-lg">
-                    <span class="text-sm truncate w-5/6">${item}</span>
+                <div class="flex justify-between items-center bg-gray-50 border p-2 rounded-lg text-sm">
+                    <span class="truncate w-5/6">${item}</span>
                     <button onclick="removeListItem('${type}', ${index})" class="text-red-500 hover:text-red-700 px-2"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
@@ -1149,13 +1154,34 @@
             renderAdminLists(type);
         }
 
-        function saveNotices() {
-            saveToLocalStorage();
-            showToast('บันทึกประกาศและแจ้งเตือนแล้ว');
+        async function saveNotices(btn) {
+            btn.disabled = true;
+            try {
+                // Delete all old notices & warnings
+                await supabaseClient.from('notices_warnings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
+                const rows = [];
+                appData.notices.forEach((content, idx) => {
+                    rows.push({ type: 'notice', content: content, sort_order: idx });
+                });
+                appData.warnings.forEach((content, idx) => {
+                    rows.push({ type: 'warning', content: content, sort_order: idx });
+                });
+
+                if (rows.length > 0) {
+                    await supabaseClient.from('notices_warnings').insert(rows);
+                }
+
+                await fetchAppData();
+                showToast('บันทึกประกาศสำเร็จ');
+            } catch (err) {
+                alert('เกิดข้อผิดพลาด: ' + err.message);
+            } finally {
+                btn.disabled = false;
+            }
         }
 
-
-        // --- ADMIN: Games Management ---
+        // --- ADMIN: Games ---
         function renderAdminGamesList() {
             const tbody = document.getElementById('adm-gamesListBody');
             const filterEl = document.getElementById('adm-gameFilter');
@@ -1167,6 +1193,11 @@
                 games = games.filter(g => g.categoryId === filterVal);
             }
 
+            if(games.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-gray-500">ไม่มีเกมในหมวดหมู่นี้</td></tr>`;
+                return;
+            }
+
             tbody.innerHTML = games.map(game => {
                 const catObj = appData.categories.find(c => c.id === game.categoryId);
                 const catName = catObj ? catObj.name : 'Unknown';
@@ -1176,7 +1207,7 @@
                 
                 const iconDisplay = game.customIcon 
                     ? `<img src="${game.customIcon}" class="w-10 h-10 object-cover rounded-lg mx-auto shadow-sm">`
-                    : `<span class="text-2xl">${game.icon}</span>`;
+                    : `<span class="text-2xl">${game.icon || '🎮'}</span>`;
 
                 return `
                 <tr class="border-b hover:bg-gray-50">
@@ -1184,9 +1215,9 @@
                     <td class="p-3 font-medium">${game.name}</td>
                     <td class="p-3 text-gray-500 text-sm">${catName}</td>
                     <td class="p-3 text-center">${statusHtml}</td>
-                    <td class="p-3 text-center text-gray-600">${game.packages.length}</td>
+                    <td class="p-3 text-center text-gray-600">${game.packages ? game.packages.length : 0}</td>
                     <td class="p-3 text-center">
-                        <button onclick="openEditGameModal('${game.id}')" class="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1.5 rounded-lg transition text-sm">
+                        <button onclick="openEditGameModal('${game.id}')" class="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1.5 rounded-lg transition text-sm font-bold">
                             <i class="fas fa-edit"></i> จัดการ
                         </button>
                     </td>
@@ -1224,16 +1255,16 @@
                 btnDelete.classList.remove('hidden');
 
                 tbody.innerHTML = '';
-                if(game.packages.length > 0) {
-                    game.packages.forEach((pkg, idx) => addPackageRow(idx + 1, pkg.name, pkg.price));
+                if(game.packages && game.packages.length > 0) {
+                    game.packages.forEach((pkg) => addPackageRow(pkg.name, pkg.price));
                 } else {
-                    addPackageRow(1, '', '');
+                    addPackageRow('', '');
                 }
             } else {
                 document.getElementById('admGameModalTitle').innerText = 'เพิ่มเกมใหม่';
                 document.getElementById('editGameId').value = 'new_' + Date.now();
                 document.getElementById('editGameName').value = '';
-                document.getElementById('editGameCategory').value = 'uid';
+                document.getElementById('editGameCategory').value = appData.categories[0]?.id || 'uid';
                 document.getElementById('editGameIcon').value = '🎮';
                 document.getElementById('editGameStatus').value = 'open';
                 document.getElementById('editGameCustomIcon').value = '';
@@ -1242,11 +1273,9 @@
                 document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden');
                 
                 btnDelete.classList.add('hidden');
-                
                 tbody.innerHTML = '';
-                addPackageRow(1, '', '');
+                addPackageRow('', '');
             }
-            
             modal.classList.remove('hidden');
         }
 
@@ -1255,37 +1284,21 @@
             if(!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 150;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const dataUrl = canvas.toDataURL('image/png', 0.9);
-                    
-                    document.getElementById('editGameCustomIcon').value = dataUrl;
-                    document.getElementById('adm-gameIconPreview').src = dataUrl;
-                    document.getElementById('adm-gameIconPreview').classList.remove('hidden');
-                    document.getElementById('adm-gameIconPlaceholder').classList.add('hidden');
-                };
-                img.src = e.target.result;
+                document.getElementById('editGameCustomIcon').value = e.target.result;
+                document.getElementById('adm-gameIconPreview').src = e.target.result;
+                document.getElementById('adm-gameIconPreview').classList.remove('hidden');
+                document.getElementById('adm-gameIconPlaceholder').classList.add('hidden');
             };
             reader.readAsDataURL(file);
         }
 
         function removeGameIcon() {
             document.getElementById('editGameCustomIcon').value = '';
-            document.getElementById('adm-gameIconPreview').src = '';
             document.getElementById('adm-gameIconPreview').classList.add('hidden');
             document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden');
-            const fileInput = document.getElementById('adm-gameIconInput');
-            if (fileInput) fileInput.value = '';
         }
 
-        function addPackageRow(index, name, price) {
+        function addPackageRow(name, price) {
             const tbody = document.getElementById('admPackagesBody');
             if(!tbody) return;
             const rowCount = tbody.children.length + 1;
@@ -1293,8 +1306,8 @@
             tr.className = "border-b package-row";
             tr.innerHTML = `
                 <td class="p-2 text-center text-gray-500 row-num">${rowCount}</td>
-                <td class="p-2"><input type="text" value="${name}" placeholder="เช่น 100 เพชร" class="w-full border rounded p-1.5 pkg-name"></td>
-                <td class="p-2"><input type="number" value="${price}" placeholder="ราคา" class="w-full border rounded p-1.5 pkg-price"></td>
+                <td class="p-2"><input type="text" value="${name}" placeholder="เช่น 100 เพชร" class="w-full border rounded p-1.5 pkg-name bg-white"></td>
+                <td class="p-2"><input type="number" value="${price}" placeholder="ราคา" class="w-full border rounded p-1.5 pkg-price bg-white"></td>
                 <td class="p-2 text-center">
                     <button type="button" onclick="this.closest('tr').remove(); updateRowNumbers();" class="text-red-500 hover:text-red-700 bg-red-50 p-1.5 rounded"><i class="fas fa-trash"></i></button>
                 </td>
@@ -1302,78 +1315,94 @@
             tbody.appendChild(tr);
         }
 
-        function addEmptyPackageRow() {
-            addPackageRow('', '', '');
-            updateRowNumbers();
-        }
-
         function updateRowNumbers() {
             const rows = document.querySelectorAll('.package-row .row-num');
             rows.forEach((td, idx) => td.innerText = idx + 1);
         }
 
-        function saveGameData() {
-            const id = document.getElementById('editGameId').value;
+        async function saveGameData(btn) {
+            const idInput = document.getElementById('editGameId').value;
             const name = document.getElementById('editGameName').value.trim();
-            
-            if(!name) {
-                alert("กรุณากรอกชื่อเกม");
-                return;
-            }
+            if(!name) { alert("กรุณากรอกชื่อเกม"); return; }
 
-            const gameObj = {
-                id: id.startsWith('new_') ? 'g' + Date.now() : id,
-                categoryId: document.getElementById('editGameCategory').value,
-                name: name,
-                icon: document.getElementById('editGameIcon').value || '🎮',
-                customIcon: document.getElementById('editGameCustomIcon').value,
-                status: document.getElementById('editGameStatus').value,
-                packages: []
-            };
+            btn.disabled = true;
+            try {
+                const categoryId = document.getElementById('editGameCategory').value;
+                const icon = document.getElementById('editGameIcon').value || '🎮';
+                const customIcon = document.getElementById('editGameCustomIcon').value;
+                const status = document.getElementById('editGameStatus').value;
 
-            const rows = document.querySelectorAll('.package-row');
-            rows.forEach((row, idx) => {
-                const pNameInput = row.querySelector('.pkg-name');
-                const pPriceInput = row.querySelector('.pkg-price');
-                if(pNameInput && pPriceInput) {
-                    const pName = pNameInput.value.trim();
-                    const pPrice = pPriceInput.value;
+                let gameId = idInput;
+                const isNew = idInput.startsWith('new_');
+                if (isNew) {
+                    gameId = 'g_' + Date.now();
+                }
+
+                // 1. Upsert Game to Supabase
+                const gamePayload = {
+                    id: gameId,
+                    category_id: categoryId,
+                    name: name,
+                    icon: icon,
+                    custom_icon: customIcon,
+                    status: status
+                };
+
+                const { error: gameErr } = await supabaseClient.from('games').upsert([gamePayload]);
+                if (gameErr) throw gameErr;
+
+                // 2. Delete existing packages for this game and insert new ones
+                await supabaseClient.from('packages').delete().eq('game_id', gameId);
+
+                const packageRows = [];
+                const rows = document.querySelectorAll('.package-row');
+                rows.forEach((row, idx) => {
+                    const pName = row.querySelector('.pkg-name').value.trim();
+                    const pPrice = row.querySelector('.pkg-price').value;
                     if(pName) {
-                        gameObj.packages.push({
-                            id: 'p' + Date.now() + idx,
+                        packageRows.push({
+                            id: 'p_' + gameId + '_' + idx + '_' + Date.now(),
+                            game_id: gameId,
                             name: pName,
-                            price: pPrice ? parseInt(pPrice) : 0
+                            price: pPrice ? parseFloat(pPrice) : 0,
+                            sort_order: idx
                         });
                     }
+                });
+
+                if (packageRows.length > 0) {
+                    const { error: pkgErr } = await supabaseClient.from('packages').insert(packageRows);
+                    if (pkgErr) throw pkgErr;
                 }
-            });
 
-            if (id.startsWith('new_')) {
-                appData.games.push(gameObj);
-            } else {
-                const index = appData.games.findIndex(g => g.id === id);
-                if(index > -1) {
-                    appData.games[index] = gameObj;
-                }
-            }
-
-            saveToLocalStorage();
-            closeModal('admGameModal');
-            renderAdminGamesList();
-            showToast('บันทึกข้อมูลเกมเรียบร้อยแล้ว');
-        }
-
-        function deleteCurrentGame() {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเกมนี้?')) {
-                const id = document.getElementById('editGameId').value;
-                appData.games = appData.games.filter(g => g.id !== id);
-                saveToLocalStorage();
+                await fetchAppData();
                 closeModal('admGameModal');
                 renderAdminGamesList();
-                showToast('ลบเกมเรียบร้อยแล้ว');
+                showToast('บันทึกข้อมูลเกมเรียบร้อยแล้ว');
+            } catch (err) {
+                alert('เกิดข้อผิดพลาด: ' + err.message);
+            } finally {
+                btn.disabled = false;
             }
         }
 
+        async function deleteCurrentGame(btn) {
+            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเกมนี้?')) {
+                const gameId = document.getElementById('editGameId').value;
+                btn.disabled = true;
+                try {
+                    await supabaseClient.from('games').delete().eq('id', gameId);
+                    await fetchAppData();
+                    closeModal('admGameModal');
+                    renderAdminGamesList();
+                    showToast('ลบเกมเรียบร้อยแล้ว');
+                } catch (err) {
+                    alert('เกิดข้อผิดพลาด: ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                }
+            }
+        }
 
         // --- UTILS ---
         function closeModal(id) {
@@ -1386,18 +1415,9 @@
             if(el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        window.onclick = function(event) {
-            const modals = ['gameModal', 'adminLoginModal', 'admGameModal'];
-            modals.forEach(id => {
-                const el = document.getElementById(id);
-                if (event.target === el) {
-                    closeModal(id);
-                }
-            });
-        }
-
-        window.onload = initApp;
-
+        window.onload = () => {
+            fetchAppData();
+        };
     </script>
 </body>
 </html>
