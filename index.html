@@ -16,7 +16,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind Config for Custom Colors -->
+    <!-- Tailwind Config for Custom Colors matching reference design -->
     <script>
         tailwind.config = {
             theme: {
@@ -31,7 +31,7 @@
                             200: '#FFC2D6',  // Deeper pastel pink
                             300: '#FFA3C2',  // Bright pastel pink
                             400: '#FF7AA8',  // Vibrant pink
-                            500: '#FF4D8D',  // Main Hot Pink (from reference image)
+                            500: '#FF4D8D',  // Main Hot Pink
                             600: '#E62E70',  // Hover hot pink
                             700: '#C2185B',  // Deep Magenta for readable text
                             800: '#800E36',
@@ -43,7 +43,7 @@
         }
     </script>
 
-    <!-- Custom CSS for specific elements -->
+    <!-- Custom CSS for background animations and visual effects -->
     <style>
         body {
             background: linear-gradient(135deg, #FFF5F8 0%, #FFE1EA 50%, #FFD1E0 100%);
@@ -55,14 +55,14 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #FFE1EA; /* sugar-100 */
+            background: #FFE1EA;
         }
         ::-webkit-scrollbar-thumb {
-            background: #FF7AA8; /* sugar-400 */
+            background: #FF7AA8;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #FF4D8D; /* sugar-500 */
+            background: #FF4D8D;
         }
         .glass-panel {
             background: rgba(255, 255, 255, 0.9);
@@ -185,12 +185,14 @@
                 <div class="hero-cloud top-[5%] text-6xl opacity-50" style="animation-duration: 40s; animation-delay: -20s;">☁️</div>
             </div>
 
+            <!-- Official Store Logo Showcase (Circular Style) in Hero Section -->
             <div class="flex justify-center mb-4 relative z-10">
-                <div class="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full shadow-[0_4px_15px_rgba(255,77,141,0.4)] bg-white flex items-center justify-center overflow-hidden border-4 border-white z-10">
-                    <img id="cv-logoImage" src="" alt="Logo" class="w-full h-full object-cover hidden">
-                    <span id="cv-logoText" class="text-4xl sm:text-5xl">🍬</span>
+                <div class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full shadow-[0_6px_25px_rgba(255,77,141,0.5)] bg-white/90 backdrop-blur flex items-center justify-center overflow-hidden border-4 border-white z-10 p-2 transform hover:scale-105 transition duration-300">
+                    <img id="cv-logoImage" src="IMG_9710.jpg" alt="SUGAR GAMING Logo" class="w-full h-full object-cover rounded-full">
+                    <span id="cv-logoText" class="text-5xl hidden">🍬</span>
                 </div>
             </div>
+            
             <h2 id="cv-tagline" class="text-2xl md:text-3xl font-bold text-sugar-700 mb-2 z-10 relative"></h2>
             
             <div class="flex items-center justify-center gap-2 mb-4 z-10 relative">
@@ -232,7 +234,6 @@
 
             <hr class="border-sugar-200 mb-8">
 
-            <!-- Payment & Warnings Section -->
             <section id="contact" class="mb-8">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <i class="fas fa-wallet text-sugar-500"></i> ช่องทางการชำระเงิน
@@ -287,6 +288,7 @@
         </footer>
     </div>
 
+    <!-- Game Packages Modal -->
     <div id="gameModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-60 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col modal-enter overflow-hidden relative">
             
@@ -390,7 +392,7 @@
                                 <input type="file" id="adm-logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             </div>
                             <div class="flex flex-col gap-2">
-                                <p class="text-sm text-gray-500">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่<br>(แนะนำรูปทรงจัตุรัส อัตราส่วน 1:1)</p>
+                                <p class="text-sm text-gray-500">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่<br>(แนะนำรูปภาพสัดส่วนสี่เหลี่ยมจัตุรัส)</p>
                                 <button onclick="removeLogo()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-100 w-fit font-bold transition">
                                     <i class="fas fa-trash"></i> ลบรูปโลโก้
                                 </button>
@@ -605,6 +607,7 @@
         </div>
     </div>
 
+    <!-- Edit/Add Game Modal -->
     <div id="admGameModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-60 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col modal-enter shadow-2xl">
             <div class="bg-gray-800 p-4 text-white flex justify-between items-center rounded-t-2xl">
@@ -694,7 +697,7 @@
         // --- 1. DEFAULT DATA (Used if localStorage is empty) ---
         const defaultData = {
             storeInfo: {
-                logoImage: "",
+                logoImage: "IMG_9710.jpg",
                 name: "SUGAR GAMING",
                 tagline: "บริการเติมเกมออนไลน์",
                 lineId: "@701mqrzf",
@@ -734,7 +737,7 @@
                 { id: 'g12', categoryId: 'extra', name: 'ส่งของขวัญสติ๊กเกอร์ LINE', icon: '🎁', status: 'open', packages: [{id: 'p13', name: '50 เหรียญ', price: 25}] },
             ],
             payments: {
-                bank: { name: 'เติมเกมกับเพจ Sugar Gaming', qrImage: '9880_2.jpg' },
+                bank: { name: 'เติมเกมกับเพจ Sugar Gaming – บริการเติมเกม', qrImage: '9880_2.jpg' },
                 truewallet: { name: 'ฑิฑัมพร', phone: '' }
             },
             notices: [
@@ -757,7 +760,6 @@
 
         // --- 2. INITIALIZATION & STORAGE ---
         function initApp() {
-            // Load data from localStorage or use default
             const savedData = localStorage.getItem('sugarGamingData');
             if (savedData) {
                 try {
@@ -782,7 +784,7 @@
         function renderCustomerView() {
             const info = appData.storeInfo;
             
-            // Header & Hero
+            // Header & Hero Logo
             if (info.logoImage) {
                 document.getElementById('cv-logoImage').src = info.logoImage;
                 document.getElementById('cv-logoImage').classList.remove('hidden');
@@ -792,7 +794,6 @@
                 document.getElementById('cv-logoText').classList.remove('hidden');
             }
             
-            // Add status light to store name
             document.getElementById('cv-storeName').innerHTML = `
                 ${info.name}
                 <span class="relative flex h-2.5 w-2.5 ml-1">
@@ -845,7 +846,7 @@
 
         function setActiveCategory(catId) {
             activeCategory = catId;
-            renderCustomerView(); // Re-render to update active tab styles and grid
+            renderCustomerView();
         }
 
         function renderGamesGrid() {
@@ -860,7 +861,6 @@
             grid.innerHTML = games.map(game => {
                 const isClosed = game.status === 'closed';
                 
-                // Status Light HTML
                 const lightHtml = isClosed 
                     ? `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_6px_#ef4444]"></span></span>`
                     : `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_6px_#22c55e]"></span></span>`;
@@ -906,7 +906,7 @@
             }
 
             document.getElementById('modalGameName').innerHTML = `${game.name} ${modalLightHtml}`;
-            document.getElementById('modalReqType').innerText = category.note;
+            document.getElementById('modalReqType').innerText = category ? category.note : '';
             
             const warningEl = document.getElementById('modalStatusWarning');
             const orderBtn = document.getElementById('modalOrderBtn');
@@ -969,30 +969,27 @@
         }
 
         function switchAdminTab(tabId) {
-            // Hide all contents
             document.querySelectorAll('.admin-content').forEach(el => {
                 el.classList.add('hidden');
                 el.classList.remove('block');
             });
-            // Show target content
             document.getElementById(`content-${tabId}`).classList.remove('hidden');
             document.getElementById(`content-${tabId}`).classList.add('block');
             
-            // Update active tab styling
             document.querySelectorAll('.admin-tab').forEach(el => {
                 el.classList.remove('bg-sugar-100', 'text-sugar-700', 'border-l-4', 'border-sugar-500');
             });
             const activeBtn = document.getElementById(`tab-${tabId}`);
-            activeBtn.classList.add('bg-sugar-100', 'text-sugar-700', 'border-l-4', 'border-sugar-500');
+            if (activeBtn) {
+                activeBtn.classList.add('bg-sugar-100', 'text-sugar-700', 'border-l-4', 'border-sugar-500');
+            }
         }
 
         function initAdminDashboard() {
             switchAdminTab('info');
             
-            // Populate Info
             const info = appData.storeInfo;
             
-            // Logo
             if (info.logoImage) {
                 document.getElementById('adm-logoPreview').src = info.logoImage;
                 document.getElementById('adm-logoPreview').classList.remove('hidden');
@@ -1010,16 +1007,13 @@
             document.getElementById('adm-hours').value = info.hours;
             document.getElementById('adm-duration').value = info.duration;
 
-            // Populate Filter dropdown
             const filter = document.getElementById('adm-gameFilter');
             filter.innerHTML = `<option value="all">ทั้งหมด</option>` + 
                 appData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             
-            // Populate Games Add Modal Category Dropdown
             document.getElementById('editGameCategory').innerHTML = 
                 appData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-            // Populate Payment
             document.getElementById('adm-bankName').value = appData.payments.bank.name;
             document.getElementById('adm-qrPreview').src = appData.payments.bank.qrImage;
             document.getElementById('adm-walletName').value = appData.payments.truewallet.name;
@@ -1049,7 +1043,7 @@
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 200; // Small size for logo
+                    const MAX_WIDTH = 400;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
@@ -1059,12 +1053,10 @@
                     
                     const dataUrl = canvas.toDataURL('image/png', 0.9);
                     
-                    // Update Admin UI
                     document.getElementById('adm-logoPreview').src = dataUrl;
                     document.getElementById('adm-logoPreview').classList.remove('hidden');
                     document.getElementById('adm-logoPlaceholder').classList.add('hidden');
                     
-                    // Update State immediately (will be saved permanently when clicking Save)
                     appData.storeInfo.logoImage = dataUrl;
                 };
                 img.src = e.target.result;
@@ -1098,7 +1090,6 @@
             const file = event.target.files[0];
             if(!file) return;
             
-            // Image compression simulation using Canvas
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
@@ -1115,7 +1106,6 @@
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
                     document.getElementById(previewId).src = dataUrl;
                     
-                    // Update state immediately for QR
                     appData.payments.bank.qrImage = dataUrl;
                 };
                 img.src = e.target.result;
@@ -1135,6 +1125,7 @@
         function renderAdminLists(type) {
             const container = document.getElementById(`adm-${type}List`);
             const dataList = appData[type];
+            if (!container) return;
             container.innerHTML = dataList.map((item, index) => `
                 <div class="flex justify-between items-center bg-gray-50 border p-2 rounded-lg">
                     <span class="text-sm truncate w-5/6">${item}</span>
@@ -1167,15 +1158,18 @@
         // --- ADMIN: Games Management ---
         function renderAdminGamesList() {
             const tbody = document.getElementById('adm-gamesListBody');
-            const filterVal = document.getElementById('adm-gameFilter').value;
+            const filterEl = document.getElementById('adm-gameFilter');
+            if(!tbody || !filterEl) return;
             
+            const filterVal = filterEl.value;
             let games = appData.games;
             if(filterVal !== 'all') {
                 games = games.filter(g => g.categoryId === filterVal);
             }
 
             tbody.innerHTML = games.map(game => {
-                const catName = appData.categories.find(c => c.id === game.categoryId)?.name || 'Unknown';
+                const catObj = appData.categories.find(c => c.id === game.categoryId);
+                const catName = catObj ? catObj.name : 'Unknown';
                 const statusHtml = game.status === 'open' 
                     ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">เปิดรับ</span>`
                     : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ปิดรับ</span>`;
@@ -1207,9 +1201,9 @@
             const btnDelete = document.getElementById('btnDeleteGame');
             
             if (gameId) {
-                // Edit Mode
                 document.getElementById('admGameModalTitle').innerText = 'แก้ไขเกมและราคา';
                 const game = appData.games.find(g => g.id === gameId);
+                if(!game) return;
                 
                 document.getElementById('editGameId').value = game.id;
                 document.getElementById('editGameName').value = game.name;
@@ -1229,15 +1223,13 @@
                 
                 btnDelete.classList.remove('hidden');
 
-                // Render packages
                 tbody.innerHTML = '';
                 if(game.packages.length > 0) {
                     game.packages.forEach((pkg, idx) => addPackageRow(idx + 1, pkg.name, pkg.price));
                 } else {
-                    addPackageRow(1, '', ''); // add one empty row
+                    addPackageRow(1, '', '');
                 }
             } else {
-                // Add Mode
                 document.getElementById('admGameModalTitle').innerText = 'เพิ่มเกมใหม่';
                 document.getElementById('editGameId').value = 'new_' + Date.now();
                 document.getElementById('editGameName').value = '';
@@ -1289,11 +1281,13 @@
             document.getElementById('adm-gameIconPreview').src = '';
             document.getElementById('adm-gameIconPreview').classList.add('hidden');
             document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden');
-            document.getElementById('adm-gameIconInput').value = '';
+            const fileInput = document.getElementById('adm-gameIconInput');
+            if (fileInput) fileInput.value = '';
         }
 
         function addPackageRow(index, name, price) {
             const tbody = document.getElementById('admPackagesBody');
+            if(!tbody) return;
             const rowCount = tbody.children.length + 1;
             const tr = document.createElement('tr');
             tr.className = "border-b package-row";
@@ -1302,7 +1296,7 @@
                 <td class="p-2"><input type="text" value="${name}" placeholder="เช่น 100 เพชร" class="w-full border rounded p-1.5 pkg-name"></td>
                 <td class="p-2"><input type="number" value="${price}" placeholder="ราคา" class="w-full border rounded p-1.5 pkg-price"></td>
                 <td class="p-2 text-center">
-                    <button onclick="this.closest('tr').remove(); updateRowNumbers();" class="text-red-500 hover:text-red-700 bg-red-50 p-1.5 rounded"><i class="fas fa-trash"></i></button>
+                    <button type="button" onclick="this.closest('tr').remove(); updateRowNumbers();" class="text-red-500 hover:text-red-700 bg-red-50 p-1.5 rounded"><i class="fas fa-trash"></i></button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1337,25 +1331,26 @@
                 packages: []
             };
 
-            // Parse packages
             const rows = document.querySelectorAll('.package-row');
             rows.forEach((row, idx) => {
-                const pName = row.querySelector('.pkg-name').value.trim();
-                const pPrice = row.querySelector('.pkg-price').value;
-                if(pName) {
-                    gameObj.packages.push({
-                        id: 'p' + Date.now() + idx,
-                        name: pName,
-                        price: pPrice ? parseInt(pPrice) : 0
-                    });
+                const pNameInput = row.querySelector('.pkg-name');
+                const pPriceInput = row.querySelector('.pkg-price');
+                if(pNameInput && pPriceInput) {
+                    const pName = pNameInput.value.trim();
+                    const pPrice = pPriceInput.value;
+                    if(pName) {
+                        gameObj.packages.push({
+                            id: 'p' + Date.now() + idx,
+                            name: pName,
+                            price: pPrice ? parseInt(pPrice) : 0
+                        });
+                    }
                 }
             });
 
             if (id.startsWith('new_')) {
-                // Add to array
                 appData.games.push(gameObj);
             } else {
-                // Update existing
                 const index = appData.games.findIndex(g => g.id === id);
                 if(index > -1) {
                     appData.games[index] = gameObj;
@@ -1382,14 +1377,15 @@
 
         // --- UTILS ---
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const el = document.getElementById(id);
+            if(el) el.classList.add('hidden');
         }
 
         function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Close modals on clicking outside
         window.onclick = function(event) {
             const modals = ['gameModal', 'adminLoginModal', 'admGameModal'];
             modals.forEach(id => {
@@ -1400,7 +1396,6 @@
             });
         }
 
-        // Initialize App on load
         window.onload = initApp;
 
     </script>
