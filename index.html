@@ -26,14 +26,16 @@
                     },
                     colors: {
                         sugar: {
-                            50: '#fdf2f8',
-                            100: '#fce7f3',
-                            200: '#fbcfe8',
-                            300: '#f9a8d4',
-                            400: '#f472b6',
-                            500: '#ec4899', // Main Pink
-                            600: '#db2777',
-                            700: '#be185d',
+                            50: '#FFF5F8',   // Soft pastel background
+                            100: '#FFE1EA',  // Light pink highlight
+                            200: '#FFC2D6',  // Deeper pastel pink
+                            300: '#FFA3C2',  // Bright pastel pink
+                            400: '#FF7AA8',  // Vibrant pink
+                            500: '#FF4D8D',  // Main Hot Pink (from reference image)
+                            600: '#E62E70',  // Hover hot pink
+                            700: '#C2185B',  // Deep Magenta for readable text
+                            800: '#800E36',
+                            900: '#4D051E',
                         }
                     }
                 }
@@ -44,22 +46,23 @@
     <!-- Custom CSS for specific elements -->
     <style>
         body {
-            background-color: #fdf2f8; /* sugar-50 */
+            background: linear-gradient(135deg, #FFF5F8 0%, #FFE1EA 50%, #FFD1E0 100%);
             color: #374151;
+            background-attachment: fixed;
         }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #fce7f3;
+            background: #FFE1EA; /* sugar-100 */
         }
         ::-webkit-scrollbar-thumb {
-            background: #f472b6;
+            background: #FF7AA8; /* sugar-400 */
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #ec4899;
+            background: #FF4D8D; /* sugar-500 */
         }
         .glass-panel {
             background: rgba(255, 255, 255, 0.9);
@@ -76,18 +79,95 @@
         .hide-scroll::-webkit-scrollbar {
             display: none;
         }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.7) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(20deg); opacity: 0; }
+        }
+        @keyframes drift {
+            0% { transform: translateX(-15vw); }
+            100% { transform: translateX(115vw); }
+        }
+        @keyframes waveFlow {
+            0% { transform: translateX(0) translateZ(0) scaleY(1); }
+            50% { transform: translateX(-25%) translateZ(0) scaleY(1.1); }
+            100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+        }
+        .bg-heart {
+            position: fixed;
+            color: #FFC2D6;
+            animation: floatUp linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(255, 77, 141, 0.2));
+        }
+        .bg-cloud {
+            position: fixed;
+            color: rgba(255, 255, 255, 0.9);
+            animation: drift linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+        }
+        .bg-wave-stream {
+            position: fixed;
+            bottom: -20px;
+            left: 0;
+            width: 200%;
+            height: 250px;
+            background: linear-gradient(180deg, rgba(255, 194, 214, 0) 0%, rgba(255, 122, 168, 0.15) 100%);
+            border-radius: 40% 40% 0 0 / 60% 60% 0 0;
+            animation: waveFlow 18s ease-in-out infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes heroCloudDrift {
+            0% { left: -20%; }
+            100% { left: 120%; }
+        }
+        
+        .hero-cloud {
+            position: absolute;
+            animation: heroCloudDrift linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            color: rgba(255, 255, 255, 0.9);
+        }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col">
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <div id="animated-bg" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <!-- Soft Pink Glowing Waves in Background -->
+        <div class="bg-wave-stream"></div>
+        <div class="bg-wave-stream" style="bottom: -50px; opacity: 0.7; animation-duration: 25s; animation-direction: reverse;"></div>
+
+        <!-- Clouds -->
+        <div class="bg-cloud top-[10%] opacity-80" style="animation-duration: 45s; font-size: 5rem;">☁️</div>
+        <div class="bg-cloud top-[35%] opacity-60" style="animation-duration: 60s; animation-delay: -25s; font-size: 4rem;">☁️</div>
+        <div class="bg-cloud top-[65%] opacity-90" style="animation-duration: 50s; animation-delay: -10s; font-size: 6rem;">☁️</div>
+        <div class="bg-cloud top-[85%] opacity-50" style="animation-duration: 70s; animation-delay: -40s; font-size: 3.5rem;">☁️</div>
+        
+        <!-- Hearts -->
+        <div class="bg-heart left-[10%]" style="animation-duration: 15s; animation-delay: 0s; font-size: 2rem;">🩷</div>
+        <div class="bg-heart left-[25%]" style="animation-duration: 19s; animation-delay: -5s; font-size: 1.5rem;">💖</div>
+        <div class="bg-heart left-[45%]" style="animation-duration: 14s; animation-delay: -10s; font-size: 2.5rem;">🩷</div>
+        <div class="bg-heart left-[65%]" style="animation-duration: 22s; animation-delay: -7s; font-size: 1.8rem;">💕</div>
+        <div class="bg-heart left-[85%]" style="animation-duration: 17s; animation-delay: -2s; font-size: 2.2rem;">💗</div>
+        <div class="bg-heart left-[95%]" style="animation-duration: 20s; animation-delay: -12s; font-size: 1.5rem;">✨</div>
+    </div>
 
     <!-- ==================== CUSTOMER VIEW ==================== -->
-    <div id="customerView" class="flex-grow flex flex-col w-full max-w-4xl mx-auto bg-white shadow-2xl min-h-screen relative">
+    <div id="customerView" class="flex-grow flex flex-col w-full max-w-4xl mx-auto bg-white/90 backdrop-blur-md shadow-2xl min-h-screen relative z-10 border-x border-white/50">
         
-        <!-- Header -->
         <header class="sticky top-0 z-40 bg-sugar-500 text-white shadow-md">
             <div class="px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <h1 id="cv-storeName" class="text-xl font-bold tracking-wide">SUGAR GAMING</h1>
+                    <h1 id="cv-storeName" class="text-xl font-bold tracking-wide flex items-center gap-2">SUGAR GAMING</h1>
                 </div>
                 <button onclick="scrollToSection('contact')" class="bg-white text-sugar-600 px-4 py-1.5 rounded-full text-sm font-semibold shadow hover:bg-sugar-100 transition">
                     ติดต่อเรา
@@ -95,22 +175,37 @@
             </div>
         </header>
 
-        <!-- Hero Section -->
-        <section class="relative bg-gradient-to-b from-sugar-200 to-white pt-8 pb-6 px-4 text-center">
-            <div class="flex justify-center mb-4">
-                <div class="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full shadow-lg bg-white flex items-center justify-center overflow-hidden border-4 border-white">
+        <section class="relative bg-gradient-to-b from-sugar-300 via-sugar-100 to-sugar-50 pt-8 pb-6 px-4 text-center overflow-hidden">
+            
+            <div class="absolute inset-0 z-0 pointer-events-none">
+                <div class="hero-cloud top-[10%] text-5xl opacity-80" style="animation-duration: 25s; animation-delay: 0s;">☁️</div>
+                <div class="hero-cloud top-[45%] text-6xl opacity-60" style="animation-duration: 35s; animation-delay: -15s;">☁️</div>
+                <div class="hero-cloud top-[25%] text-7xl opacity-90" style="animation-duration: 28s; animation-delay: -8s;">☁️</div>
+                <div class="hero-cloud top-[60%] text-4xl opacity-70" style="animation-duration: 22s; animation-delay: -5s;">☁️</div>
+                <div class="hero-cloud top-[5%] text-6xl opacity-50" style="animation-duration: 40s; animation-delay: -20s;">☁️</div>
+            </div>
+
+            <div class="flex justify-center mb-4 relative z-10">
+                <div class="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full shadow-[0_4px_15px_rgba(255,77,141,0.4)] bg-white flex items-center justify-center overflow-hidden border-4 border-white z-10">
                     <img id="cv-logoImage" src="" alt="Logo" class="w-full h-full object-cover hidden">
                     <span id="cv-logoText" class="text-4xl sm:text-5xl">🍬</span>
                 </div>
             </div>
-            <h2 id="cv-tagline" class="text-2xl md:text-3xl font-bold text-sugar-700 mb-2"></h2>
-            <p id="cv-hours" class="text-sugar-600 mb-4 font-medium"></p>
+            <h2 id="cv-tagline" class="text-2xl md:text-3xl font-bold text-sugar-700 mb-2 z-10 relative"></h2>
             
-            <div class="flex flex-wrap justify-center gap-3 mb-6">
-                <a id="cv-lineBtn" href="#" target="_blank" class="flex items-center gap-2 bg-[#00B900] text-white px-5 py-2.5 rounded-full font-semibold shadow-lg hover:bg-[#009900] transition transform hover:scale-105">
+            <div class="flex items-center justify-center gap-2 mb-4 z-10 relative">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-duration: 1.5s;"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-[0_0_8px_#22c55e]"></span>
+                </span>
+                <p id="cv-hours" class="text-sugar-600 font-medium text-sm sm:text-base"></p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-3 mb-6 z-10 relative px-4 w-full max-w-lg mx-auto">
+                <a id="cv-lineBtn" href="#" target="_blank" class="w-full sm:w-auto justify-center flex items-center gap-2 bg-[#00B900] text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-[#009900] transition transform hover:scale-105">
                     <i class="fab fa-line text-xl"></i> ทักแชท LINE
                 </a>
-                <a id="cv-driveBtn" href="#" target="_blank" class="flex items-center gap-2 bg-white text-sugar-600 border border-sugar-300 px-5 py-2.5 rounded-full font-semibold shadow hover:bg-sugar-50 transition transform hover:scale-105">
+                <a id="cv-driveBtn" href="#" target="_blank" class="w-full sm:w-auto justify-center flex items-center gap-2 bg-white text-sugar-600 border border-sugar-300 px-6 py-3 rounded-full font-semibold shadow hover:bg-sugar-50 transition transform hover:scale-105">
                     <i class="fab fa-google-drive"></i> ดูเรทราคาทั้งหมด
                 </a>
             </div>
@@ -121,18 +216,17 @@
             </div>
         </section>
 
-        <!-- Main Content -->
         <main class="flex-grow p-4">
             <!-- Categories -->
             <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                 <i class="fas fa-gamepad text-sugar-500"></i> เลือกบริการ
             </h3>
-            <div id="cv-categories" class="flex overflow-x-auto hide-scroll gap-2 pb-4 mb-2">
+            <div id="cv-categories" class="flex overflow-x-auto hide-scroll gap-2 pb-4 mb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
                 <!-- Injected via JS -->
             </div>
 
             <!-- Game Grid -->
-            <div id="cv-gamesGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-8">
+            <div id="cv-gamesGrid" class="grid grid-cols-2 min-[400px]:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
                 <!-- Injected via JS -->
             </div>
 
@@ -144,9 +238,9 @@
                     <i class="fas fa-wallet text-sugar-500"></i> ช่องทางการชำระเงิน
                 </h3>
                 
-                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
                     <!-- Bank -->
-                    <div class="bg-white border-2 border-sugar-200 rounded-2xl p-4 text-center shadow-sm">
+                    <div class="bg-white border-2 border-sugar-200 rounded-2xl p-4 sm:p-6 text-center shadow-sm">
                         <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 text-xl shadow-md">
                             <i class="fas fa-university"></i>
                         </div>
@@ -182,7 +276,6 @@
             </section>
         </main>
 
-        <!-- Footer -->
         <footer class="bg-sugar-600 text-white text-center py-6 mt-auto rounded-t-3xl relative">
             <p class="font-bold text-lg mb-1">🍬 SUGAR GAMING</p>
             <p class="text-sm opacity-90">เติมเกมง่าย • รวดเร็ว • เปิดให้บริการทุกวัน</p>
@@ -194,14 +287,16 @@
         </footer>
     </div>
 
-    <!-- Modal: Game Packages (Customer View) -->
     <div id="gameModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-60 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col modal-enter overflow-hidden relative">
             
             <div id="modalHeader" class="bg-sugar-500 p-4 text-white flex items-center gap-3">
-                <span id="modalIcon" class="text-3xl bg-white bg-opacity-20 w-12 h-12 rounded-xl flex items-center justify-center"></span>
+                <div id="modalIconContainer" class="w-12 h-12 rounded-xl bg-white bg-opacity-20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <span id="modalIcon" class="text-3xl"></span>
+                    <img id="modalIconImg" src="" alt="Game Icon" class="w-full h-full object-cover hidden">
+                </div>
                 <div>
-                    <h3 id="modalGameName" class="font-bold text-xl">Game Name</h3>
+                    <h3 id="modalGameName" class="font-bold text-xl flex items-center gap-2">Game Name</h3>
                     <p id="modalReqType" class="text-xs bg-white text-sugar-600 px-2 py-0.5 rounded-full inline-block mt-1">Requirement</p>
                 </div>
                 <button onclick="closeModal('gameModal')" class="ml-auto text-white hover:text-sugar-200 text-2xl absolute top-4 right-4">
@@ -243,7 +338,6 @@
     <!-- ==================== ADMIN VIEW ==================== -->
     <div id="adminView" class="hidden flex-grow flex flex-col w-full max-w-6xl mx-auto bg-gray-100 min-h-screen">
         
-        <!-- Admin Header -->
         <header class="bg-gray-800 text-white p-4 flex justify-between items-center sticky top-0 z-40 shadow-md">
             <div class="flex items-center gap-2">
                 <i class="fas fa-cogs text-sugar-400 text-xl"></i>
@@ -256,24 +350,23 @@
 
         <div class="flex flex-col md:flex-row flex-grow">
             <!-- Admin Sidebar -->
-            <aside class="w-full md:w-64 bg-white shadow-md flex-shrink-0 md:min-h-[calc(100vh-60px)]">
-                <nav class="flex flex-row md:flex-col p-2 gap-1 overflow-x-auto md:overflow-visible">
-                    <button onclick="switchAdminTab('info')" id="tab-info" class="admin-tab active text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap">
+            <aside class="w-full md:w-64 bg-white shadow-md flex-shrink-0 md:min-h-[calc(100vh-60px)] z-30 relative">
+                <nav class="flex flex-row md:flex-col p-2 gap-2 overflow-x-auto hide-scroll md:overflow-visible">
+                    <button onclick="switchAdminTab('info')" id="tab-info" class="admin-tab active flex-shrink-0 text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap transition">
                         <i class="fas fa-store w-6"></i> ข้อมูลร้าน
                     </button>
-                    <button onclick="switchAdminTab('games')" id="tab-games" class="admin-tab text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap">
+                    <button onclick="switchAdminTab('games')" id="tab-games" class="admin-tab flex-shrink-0 text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap transition">
                         <i class="fas fa-gamepad w-6"></i> จัดการเกม & บริการ
                     </button>
-                    <button onclick="switchAdminTab('payment')" id="tab-payment" class="admin-tab text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap">
+                    <button onclick="switchAdminTab('payment')" id="tab-payment" class="admin-tab flex-shrink-0 text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap transition">
                         <i class="fas fa-money-bill-wave w-6"></i> ช่องทางชำระเงิน
                     </button>
-                    <button onclick="switchAdminTab('notices')" id="tab-notices" class="admin-tab text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap">
+                    <button onclick="switchAdminTab('notices')" id="tab-notices" class="admin-tab flex-shrink-0 text-left px-4 py-3 rounded-lg font-medium hover:bg-sugar-50 text-gray-600 whitespace-nowrap transition">
                         <i class="fas fa-bullhorn w-6"></i> ประกาศ & แจ้งเตือน
                     </button>
                 </nav>
             </aside>
 
-            <!-- Admin Content Area -->
             <main class="flex-grow p-4 md:p-6 bg-gray-50 relative">
                 
                 <!-- Toast Notification -->
@@ -282,62 +375,82 @@
                 </div>
 
                 <!-- TAB 1: Store Info -->
-                <div id="content-info" class="admin-content block">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">ข้อมูลร้านค้า</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Logo Upload -->
-                            <div class="md:col-span-2 mb-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้ร้าน (Logo)</label>
-                                <div class="flex items-center gap-4">
-                                    <div class="w-20 h-20 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden relative shadow-inner">
-                                        <img id="adm-logoPreview" src="" class="w-full h-full object-cover hidden">
-                                        <div id="adm-logoPlaceholder" class="text-2xl text-gray-400">🍬</div>
-                                        <input type="file" id="adm-logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                                    </div>
-                                    <div class="flex flex-col gap-2">
-                                        <div class="text-sm text-gray-500">คลิกที่วงกลมเพื่ออัปโหลดโลโก้<br>(ขนาดแนะนำ 1:1)</div>
-                                        <button onclick="removeLogo()" class="text-xs bg-red-100 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-200 w-fit font-bold transition">
-                                            <i class="fas fa-trash"></i> ลบรูปโลโก้
-                                        </button>
-                                    </div>
-                                </div>
+                <div id="content-info" class="admin-content block space-y-6">
+                    
+                    <!-- Section: Logo Upload -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-sugar-400"></div>
+                        <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-image text-sugar-500"></i> โลโก้ร้านค้า
+                        </h2>
+                        <div class="flex items-center gap-4">
+                            <div class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden relative shadow-inner">
+                                <img id="adm-logoPreview" src="" class="w-full h-full object-cover hidden">
+                                <div id="adm-logoPlaceholder" class="text-3xl text-gray-400">🍬</div>
+                                <input type="file" id="adm-logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             </div>
+                            <div class="flex flex-col gap-2">
+                                <p class="text-sm text-gray-500">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่<br>(แนะนำรูปทรงจัตุรัส อัตราส่วน 1:1)</p>
+                                <button onclick="removeLogo()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-100 w-fit font-bold transition">
+                                    <i class="fas fa-trash"></i> ลบรูปโลโก้
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Section: General Info -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-400"></div>
+                        <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-info-circle text-blue-500"></i> ข้อมูลทั่วไป
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อร้าน</label>
-                                <input type="text" id="adm-storeName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
+                                <input type="text" id="adm-storeName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">คำโปรย / สโลแกน</label>
-                                <input type="text" id="adm-tagline" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">LINE ID</label>
-                                <input type="text" id="adm-lineId" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">LINE Link (URL)</label>
-                                <input type="text" id="adm-lineLink" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Google Drive Link (ดูเรททั้งหมด)</label>
-                                <input type="text" id="adm-driveLink" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">คำโปรย / สโลแกน (ใต้โลโก้)</label>
+                                <input type="text" id="adm-tagline" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">เวลาทำการ</label>
-                                <input type="text" id="adm-hours" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
+                                <input type="text" id="adm-hours" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">ระยะเวลาดำเนินการ</label>
-                                <input type="text" id="adm-duration" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ระยะเวลาดำเนินการต่อคิว</label>
+                                <input type="text" id="adm-duration" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
                             </div>
                         </div>
-                        <div class="mt-6">
-                            <button onclick="saveStoreInfo()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-2.5 px-6 rounded-lg shadow transition">
-                                <i class="fas fa-save"></i> บันทึกข้อมูลร้าน
-                            </button>
+                    </div>
+
+                    <!-- Section: Contact Links -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-green-400"></div>
+                        <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-link text-green-500"></i> ช่องทางการติดต่อและลิงก์
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">LINE ID (เช่น @701mqrzf)</label>
+                                <input type="text" id="adm-lineId" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">LINE Link (URL)</label>
+                                <input type="text" id="adm-lineLink" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Google Drive Link (ดูเรทราคาทั้งหมด)</label>
+                                <input type="text" id="adm-driveLink" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-sugar-500 focus:border-sugar-500 bg-gray-50 focus:bg-white transition">
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Save Button Area -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-end">
+                        <button onclick="saveStoreInfo()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                            <i class="fas fa-save mr-2"></i> บันทึกข้อมูลร้านค้า
+                        </button>
                     </div>
                 </div>
 
@@ -373,7 +486,7 @@
                                         <th class="p-3 border-b w-32 text-center">จัดการ</th>
                                     </tr>
                                 </thead>
-                                <tbody id="adm-gamesListBody" class="text-sm">
+                                <tbody id="adm-gamesListBody" class="text-sm bg-white">
                                     <!-- Injected via JS -->
                                 </tbody>
                             </table>
@@ -382,88 +495,109 @@
                 </div>
 
                 <!-- TAB 3: Payment -->
-                <div id="content-payment" class="admin-content hidden">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">ช่องทางชำระเงิน</h2>
+                <div id="content-payment" class="admin-content hidden space-y-6">
+                    <!-- Bank Form -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
+                        <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-university text-blue-600"></i> บัญชีธนาคาร (QR Code)
+                        </h2>
                         
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- Bank Form -->
-                            <div class="border p-4 rounded-xl bg-gray-50">
-                                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-blue-700"><i class="fas fa-university"></i> ธนาคาร (QR Code)</h3>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อบัญชี</label>
-                                    <input type="text" id="adm-bankName" class="w-full border border-gray-300 rounded-lg p-2">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">รูป QR Code</label>
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-white overflow-hidden relative">
-                                            <img id="adm-qrPreview" src="" class="w-full h-full object-cover">
-                                            <input type="file" id="adm-qrInput" accept="image/*" onchange="handleImageUpload(event, 'adm-qrPreview')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อบัญชี</label>
+                                <input type="text" id="adm-bankName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white transition mb-4">
+                                <p class="text-sm text-gray-500 bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                    <i class="fas fa-info-circle text-blue-500"></i> ลูกค้าจะสแกน QR Code นี้เพื่อชำระเงิน กรุณาตรวจสอบให้แน่ใจว่าอัปโหลดรูปที่ชัดเจน
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">รูปภาพ QR Code รับเงิน</label>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-40 h-40 border-2 border-dashed border-blue-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden relative group cursor-pointer hover:bg-blue-50 transition">
+                                        <img id="adm-qrPreview" src="" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                            <span class="text-white text-sm font-bold"><i class="fas fa-upload"></i> เปลี่ยนรูป</span>
                                         </div>
-                                        <div class="text-sm text-gray-500">คลิกที่รูปเพื่ออัปโหลดใหม่<br>(ระบบจะทำการบีบอัดภาพอัตโนมัติ)</div>
+                                        <input type="file" id="adm-qrInput" accept="image/*" onchange="handleImageUpload(event, 'adm-qrPreview')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- TrueWallet Form -->
-                            <div class="border p-4 rounded-xl bg-gray-50">
-                                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-orange-600"><i class="fas fa-wallet"></i> TrueMoney Wallet</h3>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อบัญชี</label>
-                                    <input type="text" id="adm-walletName" class="w-full border border-gray-300 rounded-lg p-2">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ (ถ้าต้องการแสดง)</label>
-                                    <input type="text" id="adm-walletPhone" placeholder="ปล่อยว่างหากไม่ต้องการให้โชว์เบอร์" class="w-full border border-gray-300 rounded-lg p-2">
-                                </div>
+                    <!-- TrueWallet Form -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                        <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-wallet text-orange-500"></i> ทรูมันนี่ วอลเล็ท (TrueMoney Wallet)
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อบัญชี</label>
+                                <input type="text" id="adm-walletName" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-orange-500 focus:border-orange-500 bg-gray-50 focus:bg-white transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ (ถ้าต้องการแสดง)</label>
+                                <input type="text" id="adm-walletPhone" placeholder="ปล่อยว่างหากไม่ต้องการให้โชว์เบอร์" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-orange-500 focus:border-orange-500 bg-gray-50 focus:bg-white transition">
                             </div>
                         </div>
-                        
-                        <div class="mt-6">
-                            <button onclick="savePaymentInfo()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-2.5 px-6 rounded-lg shadow transition">
-                                <i class="fas fa-save"></i> บันทึกข้อมูลการชำระเงิน
-                            </button>
-                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-end">
+                        <button onclick="savePaymentInfo()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                            <i class="fas fa-save mr-2"></i> บันทึกข้อมูลการชำระเงิน
+                        </button>
                     </div>
                 </div>
 
                 <!-- TAB 4: Notices & Warnings -->
-                <div id="content-notices" class="admin-content hidden">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">ประกาศและแจ้งเตือน</h2>
+                <div id="content-notices" class="admin-content hidden space-y-6">
+                    
+                    <!-- General Notices -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>
+                        <h2 class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-thumbtack text-yellow-500"></i> ประกาศร้าน (แสดงหน้าแรก)
+                        </h2>
+                        <p class="text-sm text-gray-500 mb-4">ข้อความที่แสดงในกรอบสีเหลืองหน้าแรกของเว็บไซต์</p>
                         
-                        <!-- General Notices -->
-                        <div class="mb-6">
-                            <h3 class="font-bold text-lg mb-2 text-gray-700">ประกาศร้าน (แสดงหน้าแรก)</h3>
-                            <div id="adm-noticesList" class="space-y-2 mb-2">
-                                <!-- JS Injected -->
-                            </div>
-                            <div class="flex gap-2">
-                                <input type="text" id="newNoticeInput" placeholder="เพิ่มประกาศใหม่..." class="flex-grow border border-gray-300 rounded-lg p-2">
-                                <button onclick="addListItem('notices', 'newNoticeInput')" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold"><i class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
-
-                        <hr class="my-6">
-
-                        <!-- Warnings -->
-                        <div class="mb-6">
-                            <h3 class="font-bold text-lg mb-2 text-red-600">ข้อควรระวัง (แสดงก่อนชำระเงิน)</h3>
-                            <div id="adm-warningsList" class="space-y-2 mb-2">
-                                <!-- JS Injected -->
-                            </div>
-                            <div class="flex gap-2">
-                                <input type="text" id="newWarningInput" placeholder="เพิ่มข้อควรระวัง..." class="flex-grow border border-gray-300 rounded-lg p-2">
-                                <button onclick="addListItem('warnings', 'newWarningInput')" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold"><i class="fas fa-plus"></i></button>
-                            </div>
+                        <div id="adm-noticesList" class="space-y-3 mb-4">
+                            <!-- JS Injected -->
                         </div>
                         
-                        <div class="mt-6 text-right">
-                             <button onclick="saveNotices()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-2.5 px-6 rounded-lg shadow transition w-full sm:w-auto">
-                                <i class="fas fa-save"></i> บันทึกประกาศ
+                        <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                            <input type="text" id="newNoticeInput" placeholder="พิมพ์ประกาศใหม่ที่นี่..." class="flex-grow border-none bg-transparent focus:ring-0 px-2 py-1">
+                            <button onclick="addListItem('notices', 'newNoticeInput')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-bold transition">
+                                <i class="fas fa-plus mr-1"></i> เพิ่ม
                             </button>
                         </div>
+                    </div>
+
+                    <!-- Warnings -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                        <h2 class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i> ข้อควรระวัง (แสดงก่อนชำระเงิน)
+                        </h2>
+                        <p class="text-sm text-gray-500 mb-4">ข้อความแจ้งเตือนสีแดงด้านล่างสุดของหน้าเว็บ เพื่อป้องกันการโอนผิด</p>
+                        
+                        <div id="adm-warningsList" class="space-y-3 mb-4">
+                            <!-- JS Injected -->
+                        </div>
+                        
+                        <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                            <input type="text" id="newWarningInput" placeholder="พิมพ์ข้อควรระวังใหม่ที่นี่..." class="flex-grow border-none bg-transparent focus:ring-0 px-2 py-1">
+                            <button onclick="addListItem('warnings', 'newWarningInput')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-bold transition">
+                                <i class="fas fa-plus mr-1"></i> เพิ่ม
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-end">
+                         <button onclick="saveNotices()" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                            <i class="fas fa-save mr-2"></i> บันทึกประกาศทั้งหมด
+                        </button>
                     </div>
                 </div>
 
@@ -471,7 +605,6 @@
         </div>
     </div>
 
-    <!-- Admin Modal: Add/Edit Game -->
     <div id="admGameModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-60 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col modal-enter shadow-2xl">
             <div class="bg-gray-800 p-4 text-white flex justify-between items-center rounded-t-2xl">
@@ -481,6 +614,7 @@
             
             <div class="p-4 overflow-y-auto flex-grow flex flex-col gap-4">
                 <input type="hidden" id="editGameId">
+                <input type="hidden" id="editGameCustomIcon" value="">
                 
                 <!-- Game Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border">
@@ -495,7 +629,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Emoji / Icon (เช่น 🎮, 🔥)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Emoji (หากไม่ใช้รูปภาพ)</label>
                         <input type="text" id="editGameIcon" class="w-full border rounded-lg p-2" maxlength="5">
                     </div>
                     <div>
@@ -504,6 +638,17 @@
                             <option value="open">เปิดรับ (Open)</option>
                             <option value="closed">ปิดรับ (Closed)</option>
                         </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">หรืออัปโหลดรูปโลโก้เกม (ขนาดสี่เหลี่ยมจัตุรัส)</label>
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 border-2 border-dashed rounded-xl flex items-center justify-center bg-white overflow-hidden relative group">
+                                <img id="adm-gameIconPreview" src="" class="w-full h-full object-cover hidden">
+                                <span id="adm-gameIconPlaceholder" class="text-2xl">🎮</span>
+                                <input type="file" id="adm-gameIconInput" accept="image/*" onchange="handleGameIconUpload(event)" class="absolute inset-0 opacity-0 cursor-pointer">
+                            </div>
+                            <button type="button" onclick="removeGameIcon()" class="text-xs bg-red-50 text-red-600 border px-3 py-1.5 rounded-lg font-bold">ลบรูปโลโก้เกม</button>
+                        </div>
                     </div>
                 </div>
 
@@ -545,7 +690,6 @@
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
     <script>
         // --- 1. DEFAULT DATA (Used if localStorage is empty) ---
         const defaultData = {
@@ -590,7 +734,7 @@
                 { id: 'g12', categoryId: 'extra', name: 'ส่งของขวัญสติ๊กเกอร์ LINE', icon: '🎁', status: 'open', packages: [{id: 'p13', name: '50 เหรียญ', price: 25}] },
             ],
             payments: {
-                bank: { name: 'เติมเกมกับเพจ Sugar Gaming', qrImage: '9880.jpg' },
+                bank: { name: 'เติมเกมกับเพจ Sugar Gaming', qrImage: '9880_2.jpg' },
                 truewallet: { name: 'ฑิฑัมพร', phone: '' }
             },
             notices: [
@@ -648,13 +792,27 @@
                 document.getElementById('cv-logoText').classList.remove('hidden');
             }
             
-            document.getElementById('cv-storeName').innerText = info.name;
+            // Add status light to store name
+            document.getElementById('cv-storeName').innerHTML = `
+                ${info.name}
+                <span class="relative flex h-2.5 w-2.5 ml-1">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75" style="animation-duration: 1.5s;"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-300 shadow-[0_0_6px_#fff]"></span>
+                </span>
+            `;
+            
             document.getElementById('cv-tagline').innerText = info.tagline;
             document.getElementById('cv-hours').innerText = `${info.hours} | ${info.duration}`;
             
             const lineBtn = document.getElementById('cv-lineBtn');
             lineBtn.href = info.lineLink;
-            lineBtn.innerHTML = `<i class="fab fa-line text-xl"></i> ทักแชท LINE (${info.lineId})`;
+            lineBtn.innerHTML = `
+                <i class="fab fa-line text-xl"></i> ทักแชท LINE (${info.lineId})
+                <span class="relative flex h-2 w-2 ml-1">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" style="animation-duration: 1.2s;"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+            `;
             
             document.getElementById('cv-driveBtn').href = info.driveLink;
 
@@ -701,14 +859,26 @@
 
             grid.innerHTML = games.map(game => {
                 const isClosed = game.status === 'closed';
+                
+                // Status Light HTML
+                const lightHtml = isClosed 
+                    ? `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_6px_#ef4444]"></span></span>`
+                    : `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_6px_#22c55e]"></span></span>`;
+
+                const iconHtml = game.customIcon 
+                    ? `<img src="${game.customIcon}" alt="${game.name}" class="w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-2xl object-cover shadow mb-2">`
+                    : `<div class="text-4xl sm:text-5xl mb-2 drop-shadow-sm">${game.icon}</div>`;
+
                 return `
                 <div onclick="${isClosed ? '' : `openGameModal('${game.id}')`}" 
-                     class="bg-white rounded-2xl p-3 text-center border shadow-sm transition ${isClosed ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:shadow-md hover:border-sugar-300 cursor-pointer transform hover:-translate-y-1 relative'}">
+                     class="bg-white/90 backdrop-blur-sm rounded-2xl p-3 sm:p-4 text-center border shadow-sm transition ${isClosed ? 'opacity-75 cursor-not-allowed grayscale-[30%]' : 'hover:shadow-md hover:border-sugar-300 cursor-pointer transform hover:-translate-y-1 relative'}">
                     
-                    ${isClosed ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-xl">ปิดรับ</div>` : ''}
+                    ${isClosed ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-xl flex items-center gap-1.5 shadow-sm">${lightHtml} ปิดรับ</div>` : ''}
                     
-                    <div class="text-4xl mb-2 drop-shadow-sm">${game.icon}</div>
-                    <div class="text-sm font-semibold text-gray-800 leading-tight">${game.name}</div>
+                    ${iconHtml}
+                    <div class="text-xs sm:text-sm font-bold text-gray-800 leading-tight flex items-center justify-center gap-1.5">
+                        ${!isClosed ? lightHtml : ''} ${game.name}
+                    </div>
                 </div>
             `}).join('');
         }
@@ -717,9 +887,25 @@
             const game = appData.games.find(g => g.id === gameId);
             const category = appData.categories.find(c => c.id === game.categoryId);
             if(!game) return;
+            
+            const isClosed = game.status === 'closed';
+            const modalLightHtml = isClosed
+                ? `<span class="relative flex h-3 w-3 ml-1"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-400 shadow-[0_0_8px_#fff]"></span></span>`
+                : `<span class="relative flex h-3 w-3 ml-1"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-400 shadow-[0_0_8px_#fff]"></span></span>`;
 
-            document.getElementById('modalIcon').innerText = game.icon;
-            document.getElementById('modalGameName').innerText = game.name;
+            if (game.customIcon) {
+                document.getElementById('modalIcon').classList.add('hidden');
+                const imgEl = document.getElementById('modalIconImg');
+                imgEl.src = game.customIcon;
+                imgEl.classList.remove('hidden');
+            } else {
+                document.getElementById('modalIconImg').classList.add('hidden');
+                const spanEl = document.getElementById('modalIcon');
+                spanEl.innerText = game.icon;
+                spanEl.classList.remove('hidden');
+            }
+
+            document.getElementById('modalGameName').innerHTML = `${game.name} ${modalLightHtml}`;
             document.getElementById('modalReqType').innerText = category.note;
             
             const warningEl = document.getElementById('modalStatusWarning');
@@ -994,9 +1180,13 @@
                     ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">เปิดรับ</span>`
                     : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ปิดรับ</span>`;
                 
+                const iconDisplay = game.customIcon 
+                    ? `<img src="${game.customIcon}" class="w-10 h-10 object-cover rounded-lg mx-auto shadow-sm">`
+                    : `<span class="text-2xl">${game.icon}</span>`;
+
                 return `
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3 text-center text-2xl">${game.icon}</td>
+                    <td class="p-3 text-center">${iconDisplay}</td>
                     <td class="p-3 font-medium">${game.name}</td>
                     <td class="p-3 text-gray-500 text-sm">${catName}</td>
                     <td class="p-3 text-center">${statusHtml}</td>
@@ -1024,8 +1214,18 @@
                 document.getElementById('editGameId').value = game.id;
                 document.getElementById('editGameName').value = game.name;
                 document.getElementById('editGameCategory').value = game.categoryId;
-                document.getElementById('editGameIcon').value = game.icon;
+                document.getElementById('editGameIcon').value = game.icon || '🎮';
                 document.getElementById('editGameStatus').value = game.status;
+                document.getElementById('editGameCustomIcon').value = game.customIcon || '';
+
+                if (game.customIcon) {
+                    document.getElementById('adm-gameIconPreview').src = game.customIcon;
+                    document.getElementById('adm-gameIconPreview').classList.remove('hidden');
+                    document.getElementById('adm-gameIconPlaceholder').classList.add('hidden');
+                } else {
+                    document.getElementById('adm-gameIconPreview').classList.add('hidden');
+                    document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden');
+                }
                 
                 btnDelete.classList.remove('hidden');
 
@@ -1044,6 +1244,10 @@
                 document.getElementById('editGameCategory').value = 'uid';
                 document.getElementById('editGameIcon').value = '🎮';
                 document.getElementById('editGameStatus').value = 'open';
+                document.getElementById('editGameCustomIcon').value = '';
+
+                document.getElementById('adm-gameIconPreview').classList.add('hidden');
+                document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden');
                 
                 btnDelete.classList.add('hidden');
                 
@@ -1052,6 +1256,40 @@
             }
             
             modal.classList.remove('hidden');
+        }
+
+        function handleGameIconUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 150;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL('image/png', 0.9);
+                    
+                    document.getElementById('editGameCustomIcon').value = dataUrl;
+                    document.getElementById('adm-gameIconPreview').src = dataUrl;
+                    document.getElementById('adm-gameIconPreview').classList.remove('hidden');
+                    document.getElementById('adm-gameIconPlaceholder').classList.add('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeGameIcon() {
+            document.getElementById('editGameCustomIcon').value = '';
+            document.getElementById('adm-gameIconPreview').src = '';
+            document.getElementById('adm-gameIconPreview').classList.add('hidden');
+            document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden');
+            document.getElementById('adm-gameIconInput').value = '';
         }
 
         function addPackageRow(index, name, price) {
@@ -1094,6 +1332,7 @@
                 categoryId: document.getElementById('editGameCategory').value,
                 name: name,
                 icon: document.getElementById('editGameIcon').value || '🎮',
+                customIcon: document.getElementById('editGameCustomIcon').value,
                 status: document.getElementById('editGameStatus').value,
                 packages: []
             };
