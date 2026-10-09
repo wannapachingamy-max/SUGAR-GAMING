@@ -1,1177 +1,1025 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUGAR GAMING | บริการเติมเกมออนไลน์</title>
-    
-    <!-- Fonts: Kanit for friendly Thai typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Supabase JS Client SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- Tailwind Config for My Melody Theme (Soft Pink & Chocolate Brown) -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Kanit', 'sans-serif'],
-                    },
-                    colors: {
-                        sugar: {
-                            50: '#FFF0F5',   // Very pale pink background
-                            100: '#FFE4EE',  // Soft pink highlight
-                            200: '#FFD1E3',  // Melody light pink
-                            300: '#FFB7D5',  // Main pastel pink
-                            400: '#FF9EBB',  // Slightly deeper pink
-                            500: '#FF85A2',  // Button pink
-                            600: '#E66A8A',  // Hover pink
-                            700: '#8B5A33',  // Light chocolate brown
-                            800: '#5C3A21',  // Dark chocolate brown (Main Text)
-                            900: '#382212',  // Deepest brown
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Custom CSS for background animations and visual effects -->
-    <style>
-        body {
-            background: linear-gradient(135deg, #FFF0F5 0%, #FFE4EE 50%, #FFD1E3 100%);
-            color: #5C3A21;
-            background-attachment: fixed;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            color: #5C3A21;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FFE4EE;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #FFB7D5;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #FF85A2;
-        }
-        .modal-enter {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .hide-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.7) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.2) rotate(20deg); opacity: 0; }
-        }
-        @keyframes drift {
-            0% { transform: translateX(-15vw); }
-            100% { transform: translateX(115vw); }
-        }
-        @keyframes waveFlow {
-            0% { transform: translateX(0) translateZ(0) scaleY(1); }
-            50% { transform: translateX(-25%) translateZ(0) scaleY(1.1); }
-            100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
-        }
-        .bg-heart {
-            position: fixed;
-            color: white;
-            animation: floatUp linear infinite;
-            z-index: 0;
-            pointer-events: none;
-            filter: drop-shadow(0 2px 4px rgba(255, 133, 162, 0.3));
-        }
-        .bg-cloud {
-            position: fixed;
-            color: rgba(255, 255, 255, 0.95);
-            animation: drift linear infinite;
-            z-index: 0;
-            pointer-events: none;
-            filter: drop-shadow(0 4px 10px rgba(255, 183, 213, 0.4));
-        }
-        .bg-wave-stream {
-            position: fixed;
-            bottom: -20px;
-            left: 0;
-            width: 200%;
-            height: 250px;
-            background: linear-gradient(180deg, rgba(255, 183, 213, 0) 0%, rgba(255, 183, 213, 0.25) 100%);
-            border-radius: 40% 40% 0 0 / 60% 60% 0 0;
-            animation: waveFlow 18s ease-in-out infinite alternate;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        @keyframes heroCloudDrift {
-            0% { left: -20%; }
-            100% { left: 120%; }
-        }
-        
-        .hero-cloud {
-            position: absolute;
-            animation: heroCloudDrift linear infinite;
-            z-index: 0;
-            pointer-events: none;
-            filter: drop-shadow(0 4px 6px rgba(255, 183, 213, 0.3));
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .cute-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            border: 2px solid #FFF0F5;
-            border-radius: 24px;
-            box-shadow: 0 4px 15px rgba(255, 183, 213, 0.2);
-            transition: all 0.3s ease;
-        }
-        .cute-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(255, 133, 162, 0.3);
-            border-color: #FFB7D5;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUGAR GAMING | บริการเติมเกมออนไลน์</title>
+<!-- Fonts: Kanit for friendly Thai typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Supabase JS Client SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Tailwind Config for My Melody Theme (Soft Pink & Chocolate Brown) -->
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Kanit', 'sans-serif'],
+},
+colors: {
+sugar: {
+50: '#FFF0F5',   // Very pale pink background
+100: '#FFE4EE',  // Soft pink highlight
+200: '#FFD1E3',  // Melody light pink
+300: '#FFB7D5',  // Main pastel pink
+400: '#FF9EBB',  // Slightly deeper pink
+500: '#FF85A2',  // Button pink
+600: '#E66A8A',  // Hover pink
+700: '#8B5A33',  // Light chocolate brown
+800: '#5C3A21',  // Dark chocolate brown (Main Text)
+900: '#382212',  // Deepest brown
+}
+}
+}
+}
+}
+</script>
+<!-- Custom CSS for background animations and visual effects -->
+<style>
+body {
+background: linear-gradient(135deg, #FFF0F5 0%, #FFE4EE 50%, #FFD1E3 100%);
+color: #5C3A21;
+background-attachment: fixed;
+}
+h1, h2, h3, h4, h5, h6 {
+color: #5C3A21;
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+width: 8px;
+}
+::-webkit-scrollbar-track {
+background: #FFE4EE;
+}
+::-webkit-scrollbar-thumb {
+background: #FFB7D5;
+border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: #FF85A2;
+}
+.modal-enter {
+animation: fadeIn 0.3s ease-out forwards;
+}
+@keyframes fadeIn {
+from { opacity: 0; transform: scale(0.95); }
+to { opacity: 1; transform: scale(1); }
+}
+.hide-scroll::-webkit-scrollbar {
+display: none;
+}
+@keyframes floatUp {
+0% { transform: translateY(100vh) scale(0.7) rotate(0deg); opacity: 0; }
+10% { opacity: 0.8; }
+90% { opacity: 0.8; }
+100% { transform: translateY(-10vh) scale(1.2) rotate(20deg); opacity: 0; }
+}
+@keyframes drift {
+0% { transform: translateX(-15vw); }
+100% { transform: translateX(115vw); }
+}
+@keyframes waveFlow {
+0% { transform: translateX(0) translateZ(0) scaleY(1); }
+50% { transform: translateX(-25%) translateZ(0) scaleY(1.1); }
+100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+}
+.bg-heart {
+position: fixed;
+color: white;
+animation: floatUp linear infinite;
+z-index: 0;
+pointer-events: none;
+filter: drop-shadow(0 2px 4px rgba(255, 133, 162, 0.3));
+}
+.bg-cloud {
+position: fixed;
+color: rgba(255, 255, 255, 0.95);
+animation: drift linear infinite;
+z-index: 0;
+pointer-events: none;
+filter: drop-shadow(0 4px 10px rgba(255, 183, 213, 0.4));
+}
+.bg-wave-stream {
+position: fixed;
+bottom: -20px;
+left: 0;
+width: 200%;
+height: 250px;
+background: linear-gradient(180deg, rgba(255, 183, 213, 0) 0%, rgba(255, 183, 213, 0.25) 100%);
+border-radius: 40% 40% 0 0 / 60% 60% 0 0;
+animation: waveFlow 18s ease-in-out infinite alternate;
+z-index: 0;
+pointer-events: none;
+}
+@keyframes heroCloudDrift {
+0% { left: -20%; }
+100% { left: 120%; }
+}
+.hero-cloud {
+position: absolute;
+animation: heroCloudDrift linear infinite;
+z-index: 0;
+pointer-events: none;
+filter: drop-shadow(0 4px 6px rgba(255, 183, 213, 0.3));
+color: rgba(255, 255, 255, 0.95);
+}
+.cute-card {
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(5px);
+border: 2px solid #FFF0F5;
+border-radius: 24px;
+box-shadow: 0 4px 15px rgba(255, 183, 213, 0.2);
+transition: all 0.3s ease;
+}
+.cute-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 25px rgba(255, 133, 162, 0.3);
+border-color: #FFB7D5;
+}
+</style>
 </head>
 <body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden text-sugar-800">
-
-    <div id="animated-bg" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
-        <div class="bg-wave-stream"></div>
-        <div class="bg-wave-stream" style="bottom: -50px; opacity: 0.7; animation-duration: 25s; animation-direction: reverse;"></div>
-
-        <div class="bg-cloud top-[10%] opacity-80" style="animation-duration: 45s; font-size: 5rem;">☁️</div>
-        <div class="bg-cloud top-[35%] opacity-60" style="animation-duration: 60s; animation-delay: -25s; font-size: 4rem;">☁️</div>
-        <div class="bg-cloud top-[65%] opacity-90" style="animation-duration: 50s; animation-delay: -10s; font-size: 6rem;">☁️</div>
-        <div class="bg-cloud top-[85%] opacity-50" style="animation-duration: 70s; animation-delay: -40s; font-size: 3.5rem;">☁️</div>
-        
-        <div class="bg-heart left-[10%]" style="animation-duration: 15s; animation-delay: 0s; font-size: 2rem;">🤍</div>
-        <div class="bg-heart left-[25%]" style="animation-duration: 19s; animation-delay: -5s; font-size: 1.5rem; color:#FFB7D5;">🩷</div>
-        <div class="bg-heart left-[45%]" style="animation-duration: 14s; animation-delay: -10s; font-size: 2.5rem;">🤍</div>
-        <div class="bg-heart left-[65%]" style="animation-duration: 22s; animation-delay: -7s; font-size: 1.8rem; color:#FFB7D5;">🩷</div>
-        <div class="bg-heart left-[85%]" style="animation-duration: 17s; animation-delay: -2s; font-size: 2.2rem;">🤍</div>
-        <div class="bg-heart left-[95%]" style="animation-duration: 20s; animation-delay: -12s; font-size: 1.5rem; color:#FFB7D5;">✨</div>
-    </div>
-
-    <!-- ==================== CUSTOMER VIEW ==================== -->
-    <div id="customerView" class="flex-grow flex flex-col w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-md shadow-[0_0_40px_rgba(255,183,213,0.3)] min-h-screen relative z-10 border-x border-white/50">
-        
-        <header class="sticky top-0 z-40 bg-sugar-300 text-sugar-800 shadow-md border-b-2 border-white/50">
-            <div class="px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <h1 id="cv-storeName" class="text-xl font-extrabold tracking-wide flex items-center gap-2 drop-shadow-sm">SUGAR GAMING</h1>
-                </div>
-                <button onclick="scrollToSection('contact')" class="bg-white text-sugar-600 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm hover:bg-sugar-50 border border-sugar-100 transition">
-                    ติดต่อเรา
-                </button>
-            </div>
-        </header>
-
-        <section class="relative bg-gradient-to-b from-sugar-200 via-sugar-100 to-sugar-50 pt-10 pb-8 px-4 text-center overflow-hidden border-b-4 border-white">
-            
-            <div class="absolute inset-0 z-0 pointer-events-none">
-                <div class="hero-cloud top-[10%] text-5xl opacity-80" style="animation-duration: 25s; animation-delay: 0s;">☁️</div>
-                <div class="hero-cloud top-[45%] text-6xl opacity-60" style="animation-duration: 35s; animation-delay: -15s;">☁️</div>
-                <div class="hero-cloud top-[25%] text-7xl opacity-90" style="animation-duration: 28s; animation-delay: -8s;">☁️</div>
-                <div class="hero-cloud top-[60%] text-4xl opacity-70" style="animation-duration: 22s; animation-delay: -5s;">☁️</div>
-            </div>
-
-            <div class="flex justify-center mb-5 relative z-10">
-                <div class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full shadow-[0_8px_25px_rgba(255,133,162,0.4)] bg-white border-[6px] border-white z-10 p-1 transform hover:scale-105 transition duration-300">
-                    <img id="cv-logoImage" src="" alt="SUGAR GAMING Logo" class="w-full h-full object-cover rounded-full hidden">
-                    <span id="cv-logoText" class="text-6xl flex items-center justify-center w-full h-full">🎀</span>
-                </div>
-            </div>
-            
-            <h2 id="cv-tagline" class="text-2xl md:text-3xl font-extrabold text-sugar-800 mb-2 z-10 relative drop-shadow-sm">บริการเติมเกมออนไลน์</h2>
-            
-            <div class="flex items-center justify-center gap-2 mb-6 z-10 relative">
-                <span class="relative flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-duration: 1.5s;"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-[0_0_8px_#22c55e]"></span>
-                </span>
-                <p id="cv-hours" class="text-sugar-700 font-bold text-sm sm:text-base">เปิดให้บริการทุกวัน | ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว</p>
-            </div>
-            
-            <div class="flex flex-wrap justify-center items-center gap-3 mb-6 z-10 relative px-4 w-full max-w-xl mx-auto">
-                <a id="cv-lineBtn" href="https://lin.ee/u7SBLec" target="_blank" class="flex-1 min-w-[150px] justify-center flex items-center gap-2 bg-[#00B900] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#009900] transition transform hover:-translate-y-1">
-                    <i class="fab fa-line text-2xl"></i> ทักแชท LINE
-                </a>
-                <a id="cv-fbBtn" href="https://www.facebook.com/share/1Cha6DUTZU/" target="_blank" class="flex-1 min-w-[150px] justify-center flex items-center gap-2 bg-[#1877F2] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#166FE5] transition transform hover:-translate-y-1">
-                    <i class="fab fa-facebook text-2xl"></i> Facebook
-                </a>
-            </div>
-
-            <!-- Notices -->
-            <div id="cv-notices" class="bg-white/80 backdrop-blur border-2 border-sugar-200 text-sugar-800 rounded-3xl p-4 text-sm max-w-2xl mx-auto text-left shadow-sm font-medium">
-                <p>📌 ช่วงกิจกรรมหรือมีคิวจำนวนมาก อาจใช้เวลานานกว่าปกติ</p>
-                <p>📌 เรทราคาอาจมีการเปลี่ยนแปลงขึ้นลงตามกลไกตลาด</p>
-            </div>
-        </section>
-
-        <main class="flex-grow p-4 sm:p-6">
-            <h3 class="text-xl font-extrabold text-sugar-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-star text-yellow-400 drop-shadow-sm"></i> เลือกบริการ
-            </h3>
-            <div id="cv-categories" class="flex overflow-x-auto hide-scroll gap-3 pb-4 mb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-                <!-- Fallback categories -->
-            </div>
-
-            <div id="cv-gamesGrid" class="grid grid-cols-2 min-[400px]:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 mt-2">
-                <!-- Fallback games -->
-            </div>
-
-            <div class="flex items-center justify-center gap-4 text-sugar-300 mb-10">
-                <span class="w-16 h-0.5 bg-sugar-200 rounded-full"></span>
-                <i class="fas fa-heart text-sugar-400"></i>
-                <span class="w-16 h-0.5 bg-sugar-200 rounded-full"></span>
-            </div>
-
-            <section id="contact" class="mb-8">
-                <h3 class="text-xl font-extrabold text-sugar-800 mb-4 flex items-center gap-2">
-                    <i class="fas fa-wallet text-sugar-500 drop-shadow-sm"></i> ช่องทางการชำระเงิน
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-                    <!-- Bank -->
-                    <div class="cute-card p-6 text-center">
-                        <div class="bg-blue-100 text-blue-600 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm border border-blue-200">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <h4 class="font-extrabold text-sugar-800 text-lg">โอนผ่านธนาคาร</h4>
-                        <div class="w-48 h-48 mx-auto my-4 rounded-2xl shadow-inner border-4 border-white bg-gray-50 overflow-hidden flex items-center justify-center">
-                            <img id="cv-qrImage" src="" alt="QR Code" class="w-full h-full object-contain hidden">
-                            <span id="cv-qrPlaceholder" class="text-gray-400 text-sm font-medium">ยังไม่มีรูป QR</span>
-                        </div>
-                        <p class="text-sm text-sugar-600 font-medium">ชื่อบัญชี</p>
-                        <p id="cv-bankName" class="font-extrabold text-sugar-800 text-lg">เติมเกมกับเพจ Sugar Gaming – บริการเติมเกม</p>
-                    </div>
-
-                    <!-- TrueWallet -->
-                    <div class="cute-card p-6 text-center flex flex-col justify-center">
-                        <div class="bg-orange-100 text-orange-500 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm border border-orange-200">
-                            <i class="fas fa-wallet"></i>
-                        </div>
-                        <h4 class="font-extrabold text-sugar-800 text-lg">TrueMoney Wallet</h4>
-                        <p class="text-sm text-sugar-600 font-medium mt-6">ชื่อบัญชี</p>
-                        <p id="cv-walletName" class="font-extrabold text-sugar-800 text-2xl mt-1">ฑิฑัมพร</p>
-                        <div class="mt-6 p-4 bg-orange-50 rounded-2xl border border-orange-200 text-left shadow-inner">
-                            <p class="text-sm text-orange-800 font-medium leading-relaxed">⚠️ <b>ระวัง:</b> เบอร์ TrueWallet มีการเปลี่ยนแปลงบ่อย<br>กรุณาสอบถามแอดมินทาง LINE ก่อนโอนทุกครั้งนะคะ 💖</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Warnings -->
-                <div class="bg-white/90 border-2 border-red-200 rounded-3xl p-5 shadow-sm">
-                    <h4 class="font-extrabold text-red-500 mb-3 flex items-center gap-2">
-                        <i class="fas fa-exclamation-circle"></i> แจ้งเตือนลูกค้าทุกท่าน
-                    </h4>
-                    <ul id="cv-warnings" class="list-none space-y-2.5 text-sm text-sugar-800 font-medium">
-                        <li>ตรวจสอบบัญชีร้านก่อนโอนทุกครั้ง</li>
-                        <li>เฟซจริงมีเครื่องหมายยืนยันตัวตน</li>
-                        <li>ทางร้านไม่รับผิดชอบทุกกรณีหากโอนผิด</li>
-                        <li>ไม่รับกลาง ไม่รับแลกเงิน ไม่รับฝากซื้อ-ขายไอดี ไม่รับยืมเงิน</li>
-                    </ul>
-                </div>
-            </section>
-        </main>
-
-        <footer class="bg-sugar-300 text-sugar-800 text-center py-8 mt-auto rounded-t-[40px] relative border-t-4 border-white shadow-[0_-10px_20px_rgba(255,183,213,0.2)]">
-            <p class="font-extrabold text-2xl mb-1 flex justify-center items-center gap-2">
-                <i class="fas fa-star text-white text-base"></i> SUGAR GAMING <i class="fas fa-star text-white text-base"></i>
-            </p>
-            <p class="text-sm font-semibold opacity-80">เติมเกมง่าย • รวดเร็ว • ปลอดภัย 100%</p>
-            
-            <button onclick="toggleAdminLogin()" class="absolute bottom-4 right-4 opacity-20 hover:opacity-100 text-xs font-bold bg-white/50 px-3 py-1.5 rounded-full transition">
-                <i class="fas fa-cog"></i> Admin
-            </button>
-        </footer>
-    </div>
-
-    <!-- Game Packages Modal (With Large Preview Image at Top) -->
-    <div id="gameModal" class="fixed inset-0 z-50 hidden bg-sugar-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-[32px] w-full max-w-lg max-h-[90vh] flex flex-col modal-enter overflow-hidden relative border-[6px] border-white shadow-2xl">
-            <div id="modalHeader" class="bg-sugar-300 p-5 text-sugar-800 flex items-center gap-4 border-b-2 border-white">
-                <div id="modalIconContainer" class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm border-2 border-sugar-100">
-                    <span id="modalIcon" class="text-4xl"></span>
-                    <img id="modalIconImg" src="" alt="Game Icon" class="w-full h-full object-cover hidden">
-                </div>
-                <div>
-                    <h3 id="modalGameName" class="font-extrabold text-2xl flex items-center gap-2">Game Name</h3>
-                    <p id="modalReqType" class="text-xs bg-white text-sugar-600 font-bold px-3 py-1 rounded-full inline-block mt-1.5 shadow-sm border border-sugar-100">Requirement</p>
-                </div>
-                <button onclick="closeModal('gameModal')" class="ml-auto text-sugar-500 hover:text-sugar-700 text-3xl absolute top-4 right-4 bg-white/50 w-8 h-8 flex items-center justify-center rounded-full transition">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div class="p-4 overflow-y-auto bg-sugar-50 flex-grow space-y-4" id="modalPackagesBody">
-                <div id="modalStatusWarning" class="hidden bg-red-100 text-red-600 p-4 rounded-2xl text-center font-extrabold border-2 border-red-200">
-                    ❌ ปิดรับบริการชั่วคราว
-                </div>
-
-                <!-- Large Preview Image at Top of Modal -->
-                <div id="modalLargeImageContainer" class="hidden w-full bg-white rounded-2xl p-2 border-2 border-sugar-100 shadow-sm overflow-hidden text-center">
-                    <img id="modalLargeImage" src="" alt="Rate Preview" class="w-full h-auto max-h-72 object-contain rounded-xl mx-auto">
-                </div>
-
-                <div id="packagesList" class="space-y-3"></div>
-            </div>
-            
-            <div class="p-5 bg-white border-t-2 border-sugar-100 text-center">
-                <a id="modalOrderBtn" href="#" target="_blank" class="block w-full bg-sugar-500 hover:bg-sugar-600 text-white font-extrabold text-lg py-4 rounded-2xl shadow-[0_4px_15px_rgba(255,133,162,0.4)] transition transform hover:-translate-y-1">
-                    <i class="fab fa-line mr-1"></i> สั่งซื้อผ่าน LINE เลย!
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Login Modal -->
-    <div id="adminLoginModal" class="fixed inset-0 z-50 hidden bg-sugar-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-8 modal-enter text-center shadow-2xl border-4 border-sugar-100">
-            <div class="text-5xl mb-4">🎀</div>
-            <h3 class="text-2xl font-extrabold text-sugar-800 mb-2">ระบบหลังบ้าน</h3>
-            <p class="text-sm text-sugar-500 font-medium mb-6">กรุณาเข้าสู่ระบบ (Admin Only)</p>
-            
-            <div id="loginErrorMsg" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-bold rounded-xl"></div>
-
-            <input type="email" id="adminEmail" placeholder="อีเมลแอดมิน" class="w-full border-2 border-sugar-100 p-3.5 rounded-xl mb-3 focus:outline-none focus:border-sugar-400 text-sm font-medium">
-            <input type="password" id="adminPassword" placeholder="รหัสผ่าน" class="w-full border-2 border-sugar-100 p-3.5 rounded-xl mb-6 focus:outline-none focus:border-sugar-400 text-sm font-medium">
-            
-            <div class="flex gap-3">
-                <button onclick="closeModal('adminLoginModal')" class="flex-1 bg-sugar-100 text-sugar-700 hover:bg-sugar-200 py-3 rounded-xl font-bold transition">ยกเลิก</button>
-                <button onclick="handleSupabaseLogin()" id="btnLoginSubmit" class="flex-1 bg-sugar-500 hover:bg-sugar-600 text-white py-3 rounded-xl font-bold shadow-md transition">เข้าสู่ระบบ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== ADMIN VIEW ==================== -->
-    <div id="adminView" class="hidden flex-grow flex flex-col w-full max-w-6xl mx-auto bg-gray-50 min-h-screen">
-        <header class="bg-sugar-800 text-white p-4 flex justify-between items-center sticky top-0 z-40 shadow-md">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-cogs text-sugar-300 text-xl"></i>
-                <h1 class="font-bold text-lg">Admin Dashboard | 🎀</h1>
-            </div>
-            <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm font-bold shadow transition flex items-center gap-2">
-                <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
-            </button>
-        </header>
-
-        <div class="flex flex-col md:flex-row flex-grow">
-            <aside class="w-full md:w-64 bg-white shadow-md flex-shrink-0 md:min-h-[calc(100vh-68px)] z-30 relative border-r border-gray-100">
-                <nav class="flex flex-row md:flex-col p-3 gap-2 overflow-x-auto hide-scroll md:overflow-visible font-medium">
-                    <button onclick="switchAdminTab('info')" id="tab-info" class="admin-tab active flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
-                        <i class="fas fa-store w-6 text-sugar-400"></i> ข้อมูลร้าน
-                    </button>
-                    <button onclick="switchAdminTab('games')" id="tab-games" class="admin-tab flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
-                        <i class="fas fa-gamepad w-6 text-sugar-400"></i> จัดการเกม & ราคา
-                    </button>
-                    <button onclick="switchAdminTab('payment')" id="tab-payment" class="admin-tab flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
-                        <i class="fas fa-money-bill-wave w-6 text-sugar-400"></i> ช่องทางชำระเงิน
-                    </button>
-                    <button onclick="switchAdminTab('notices')" id="tab-notices" class="admin-tab flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
-                        <i class="fas fa-bullhorn w-6 text-sugar-400"></i> ประกาศ & แจ้งเตือน
-                    </button>
-                </nav>
-            </aside>
-
-            <main class="flex-grow p-4 md:p-6 relative">
-                <div id="toast" class="fixed top-24 right-4 bg-green-500 text-white px-6 py-3.5 rounded-xl shadow-xl transform translate-x-full transition-transform duration-300 z-50 flex items-center gap-3 font-bold border-2 border-white">
-                    <i class="fas fa-check-circle text-xl"></i> <span id="toastMsg">บันทึกสำเร็จ</span>
-                </div>
-
-                <!-- TAB 1 -->
-                <div id="content-info" class="admin-content block space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-sugar-300"></div>
-                        <h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-image text-sugar-400"></i> โลโก้ร้านค้า
-                        </h2>
-                        <div class="flex items-center gap-5">
-                            <div class="w-28 h-28 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden relative shadow-inner">
-                                <img id="adm-logoPreview" src="" class="w-full h-full object-cover hidden">
-                                <div id="adm-logoPlaceholder" class="text-4xl text-gray-300">🎀</div>
-                                <input type="file" id="adm-logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                            </div>
-                            <div class="flex flex-col gap-3">
-                                <p class="text-sm text-gray-500 font-medium">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่</p>
-                                <button onclick="removeLogo()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-100 w-fit font-bold transition">
-                                    <i class="fas fa-trash"></i> ลบรูปโลโก้
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-400"></div>
-                        <h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-info-circle text-blue-500"></i> ข้อมูลทั่วไป
-                        </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อร้าน</label>
-                                <input type="text" id="adm-storeName" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">คำโปรย / สโลแกน</label>
-                                <input type="text" id="adm-tagline" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">เวลาทำการ</label>
-                                <input type="text" id="adm-hours" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">ระยะเวลาดำเนินการต่อคิว</label>
-                                <input type="text" id="adm-duration" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-green-400"></div>
-                        <h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-link text-green-500"></i> ลิงก์ติดต่อ
-                        </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">LINE ID</label>
-                                <input type="text" id="adm-lineId" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-green-300 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">LINE Link URL</label>
-                                <input type="text" id="adm-lineLink" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-green-300 outline-none transition">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">Facebook Link URL</label>
-                                <input type="text" id="adm-fbLink" placeholder="https://www.facebook.com/..." class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-blue-400 outline-none transition">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end">
-                        <button onclick="saveStoreInfo(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition">
-                            <i class="fas fa-save mr-2"></i> บันทึกข้อมูลร้านค้า
-                        </button>
-                    </div>
-                </div>
-
-                <!-- TAB 2 -->
-                <div id="content-games" class="admin-content hidden">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-100 pb-5">
-                            <h2 class="text-xl font-bold text-gray-800">จัดการเกมและราคา</h2>
-                            <button onclick="openEditGameModal()" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition flex items-center gap-2">
-                                <i class="fas fa-plus"></i> เพิ่มบริการใหม่
-                            </button>
-                        </div>
-
-                        <div class="mb-5">
-                            <label class="block text-sm font-bold text-gray-700 mb-2">กรองตามหมวดหมู่</label>
-                            <select id="adm-gameFilter" onchange="renderAdminGamesList()" class="w-full sm:w-64 border border-gray-200 rounded-xl p-2.5 bg-gray-50 outline-none focus:border-sugar-300 font-medium">
-                                <option value="all">ทั้งหมด</option>
-                            </select>
-                        </div>
-
-                        <div class="overflow-x-auto rounded-xl border border-gray-200">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
-                                        <th class="p-4 w-20 text-center font-bold">ไอคอน</th>
-                                        <th class="p-4 font-bold">ชื่อบริการ</th>
-                                        <th class="p-4 font-bold">หมวดหมู่</th>
-                                        <th class="p-4 w-24 text-center font-bold">สถานะ</th>
-                                        <th class="p-4 w-24 text-center font-bold">แพ็กเกจ</th>
-                                        <th class="p-4 w-32 text-center font-bold">จัดการ</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="adm-gamesListBody" class="text-sm bg-white">
-                                    <tr><td colspan="6" class="text-center p-6 text-gray-500 font-medium">กำลังโหลดข้อมูล...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3 -->
-                <div id="content-payment" class="admin-content hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
-                        <h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-university text-blue-600"></i> บัญชีธนาคาร (QR Code)
-                        </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อบัญชี</label>
-                                <input type="text" id="adm-bankName" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-blue-300 outline-none transition mb-4">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">รูปภาพ QR Code</label>
-                                <div class="flex items-start gap-4">
-                                    <div class="w-40 h-40 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center bg-gray-50 overflow-hidden relative group cursor-pointer hover:bg-blue-50 transition">
-                                        <img id="adm-qrPreview" src="" class="w-full h-full object-contain hidden">
-                                        <div id="adm-qrPlaceholder" class="text-gray-400 text-sm font-medium flex flex-col items-center"><i class="fas fa-upload text-2xl mb-2 text-blue-300"></i>คลิกอัปโหลด</div>
-                                        <input type="file" id="adm-qrInput" accept="image/*" onchange="handleImageUpload(event, 'adm-qrPreview')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-orange-500"></div>
-                        <h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-wallet text-orange-500"></i> ทรูมันนี่ วอลเล็ท
-                        </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อบัญชี</label>
-                                <input type="text" id="adm-walletName" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-orange-300 outline-none transition">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end">
-                        <button onclick="savePaymentInfo(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition">
-                            <i class="fas fa-save mr-2"></i> บันทึกข้อมูลการชำระเงิน
-                        </button>
-                    </div>
-                </div>
-
-                <!-- TAB 4 -->
-                <div id="content-notices" class="admin-content hidden space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-yellow-400"></div>
-                        <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-thumbtack text-yellow-500"></i> ประกาศร้าน
-                        </h2>
-                        <div id="adm-noticesList" class="space-y-2 mb-5"></div>
-                        <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                            <input type="text" id="newNoticeInput" placeholder="พิมพ์ประกาศใหม่..." class="flex-grow border-none bg-transparent px-3 py-1 text-sm outline-none font-medium text-gray-700">
-                            <button onclick="addListItem('notices', 'newNoticeInput')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow">เพิ่ม</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
-                        <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-exclamation-triangle text-red-500"></i> ข้อควรระวัง
-                        </h2>
-                        <div id="adm-warningsList" class="space-y-2 mb-5"></div>
-                        <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                            <input type="text" id="newWarningInput" placeholder="พิมพ์ข้อควรระวังใหม่..." class="flex-grow border-none bg-transparent px-3 py-1 text-sm outline-none font-medium text-gray-700">
-                            <button onclick="addListItem('warnings', 'newWarningInput')" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow">เพิ่ม</button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end">
-                         <button onclick="saveNotices(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition">
-                            <i class="fas fa-save mr-2"></i> บันทึกประกาศทั้งหมด
-                        </button>
-                    </div>
-                </div>
-
-            </main>
-        </div>
-    </div>
-
-    <!-- Edit/Add Game Modal -->
-    <div id="admGameModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-[24px] w-full max-w-3xl max-h-[90vh] flex flex-col modal-enter shadow-2xl overflow-hidden">
-            <div class="bg-gray-800 p-5 text-white flex justify-between items-center">
-                <h3 id="admGameModalTitle" class="font-bold text-xl">เพิ่ม/แก้ไข เกม</h3>
-                <button onclick="closeModal('admGameModal')" class="text-gray-400 hover:text-white text-2xl transition"><i class="fas fa-times-circle"></i></button>
-            </div>
-            
-            <div class="p-5 overflow-y-auto flex-grow flex flex-col gap-5 bg-gray-50">
-                <input type="hidden" id="editGameId">
-                <input type="hidden" id="editGameCustomIcon" value="">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อบริการ</label>
-                        <input type="text" id="editGameName" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition font-medium text-gray-800">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1.5">หมวดหมู่ <span class="text-red-500 text-xs">*จำเป็น</span></label>
-                        <select id="editGameCategory" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition font-medium text-gray-800"></select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1.5">Emoji (ถ้าไม่ใช้รูป)</label>
-                        <input type="text" id="editGameIcon" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition text-xl text-center" maxlength="5">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1.5">สถานะ</label>
-                        <select id="editGameStatus" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition font-bold text-gray-800">
-                            <option value="open" class="text-green-600">✅ เปิดรับ (Open)</option>
-                            <option value="closed" class="text-red-600">❌ ปิดรับ (Closed)</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2 mt-2">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">รูปภาพใหญ่เรทราคา / รูปปกบริการ (แสดงด้านบนสุดในหน้าต่างลูกค้า)</label>
-                        <div class="flex items-center gap-4">
-                            <div class="w-20 h-20 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center bg-gray-50 overflow-hidden relative hover:bg-gray-100 transition cursor-pointer">
-                                <img id="adm-gameIconPreview" src="" class="w-full h-full object-cover hidden">
-                                <span id="adm-gameIconPlaceholder" class="text-2xl text-gray-400"><i class="fas fa-image"></i></span>
-                                <input type="file" id="adm-gameIconInput" accept="image/*" onchange="handleGameIconUpload(event)" class="absolute inset-0 opacity-0 cursor-pointer">
-                            </div>
-                            <button type="button" onclick="removeGameIcon()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition">ลบรูปใหญ่</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <h4 class="font-bold text-gray-800 text-lg flex items-center gap-2"><i class="fas fa-list-ul text-sugar-400"></i> รายการเรทราคา (แต่ละแพ็กเกจ)</h4>
-                        <button onclick="addPackageRow('', '', '')" class="text-sm bg-blue-50 border border-blue-200 text-blue-600 px-4 py-1.5 rounded-lg hover:bg-blue-100 font-bold transition shadow-sm"><i class="fas fa-plus"></i> เพิ่มแถว</button>
-                    </div>
-                    <div class="border border-gray-200 rounded-xl overflow-x-auto">
-                        <table class="w-full text-left text-sm min-w-[500px]">
-                            <thead class="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    <th class="p-3 w-10 text-center font-bold text-gray-600">#</th>
-                                    <th class="p-3 w-16 text-center font-bold text-gray-600">รูปไอเทม</th>
-                                    <th class="p-3 font-bold text-gray-600">ชื่อแพ็กเกจ (เช่น 100 เพชร)</th>
-                                    <th class="p-3 w-32 font-bold text-gray-600">ราคา (บาท)</th>
-                                    <th class="p-3 w-16 text-center font-bold text-gray-600">ลบ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admPackagesBody" class="bg-white"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="p-5 bg-white border-t border-gray-100 flex justify-between">
-                <button onclick="deleteCurrentGame(this)" id="btnDeleteGame" class="bg-red-50 border border-red-200 text-red-600 px-5 py-2.5 rounded-xl font-bold hover:bg-red-100 transition shadow-sm">
-                    <i class="fas fa-trash mr-1"></i> ลบเกมนี้
-                </button>
-                <div class="flex gap-3">
-                    <button onclick="closeModal('admGameModal')" class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-5 py-2.5 rounded-xl font-bold transition">ยกเลิก</button>
-                    <button onclick="saveGameData(this)" class="bg-sugar-500 text-white px-8 py-2.5 rounded-xl font-bold shadow-md hover:bg-sugar-600 transition">บันทึก</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const SUPABASE_URL = 'https://dmcyolyfnrxbgtmoigvp.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtY3lvbHlmbnJ4Ymd0bW9pZ3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NjY1NDUsImV4cCI6MjEwNzA0MjU0NX0.OV1beaJ_4b9AZEWXSlFjOmdbh7yx9QYgbZ1E6ZOPPms';
-        
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const fallbackData = {
-            storeInfo: {
-                name: "SUGAR GAMING",
-                tagline: "บริการเติมเกมออนไลน์",
-                lineId: "@701mqrzf",
-                lineLink: "https://lin.ee/u7SBLec",
-                fbLink: "https://www.facebook.com/share/1Cha6DUTZU/",
-                hours: "เปิดให้บริการทุกวัน",
-                duration: "ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว",
-                logoImage: ""
-            },
-            categories: [
-                { id: 'extra', name: '✨ เช่าแอพพรีเมียม', note: 'แจ้งรายละเอียดกับแอดมิน' },
-                { id: 'uid', name: '🎮 เติมด้วย UID', note: 'แจ้ง UID เกม พร้อมรายการ' },
-                { id: 'mailpass', name: '🔐 Mail & Password', note: 'แจ้ง Email / Password' },
-                { id: 'shop', name: '🍎 ฝากร้านดำเนินการ', note: 'ฝากร้านดำเนินการ' },
-                { id: 'novel', name: '📚 เติมเหรียญนิยาย', note: 'ระบบ Mail & Password' }
-            ],
-            games: [
-                { id: 'g1', categoryId: 'uid', name: 'Free Fire', icon: '🔥', status: 'open', customIcon: '', packages: [{id: 'p1', name: '100 เพชร', price: 29, image: ''}] }
-            ],
-            payments: {
-                bank: { name: 'เติมเกมกับเพจ Sugar Gaming – บริการเติมเกม', qrImage: '' },
-                truewallet: { name: 'ฑิฑัมพร', phone: '' }
-            },
-            notices: [
-                "ช่วงกิจกรรมหรือมีคิวจำนวนมาก อาจใช้เวลานานกว่าปกติ",
-                "เรทราคาอาจมีการเปลี่ยนแปลงขึ้นลงตามกลไกตลาด"
-            ],
-            warnings: [
-                "ตรวจสอบบัญชีร้านก่อนโอนทุกครั้ง",
-                "เฟซจริงมีเครื่องหมายยืนยันตัวตน",
-                "ทางร้านไม่รับผิดชอบทุกกรณีหากโอนผิด",
-                "ไม่รับกลาง ไม่รับแลกเงิน ไม่รับฝากซื้อ-ขายไอดี ไม่รับยืมเงิน"
-            ]
-        };
-
-        let appData = JSON.parse(JSON.stringify(fallbackData));
-        let activeCategory = 'extra'; // ตั้งค่าให้หมวดหมู่แรกที่เลือกคือ เช่าแอพพรีเมียม เสมอ
-        let currentEditGameId = null;
-
-        function compressImage(file, maxWidth = 600, maxHeight = 600, quality = 0.8) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = () => {
-                        let width = img.width; let height = img.height;
-                        if (width > height) { if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; } }
-                        else { if (height > maxHeight) { width = Math.round((height * maxHeight) / height); height = maxHeight; } }
-                        const canvas = document.createElement('canvas');
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.onerror = (err) => reject(err);
-                };
-                reader.onerror = (err) => reject(err);
-            });
-        }
-
-        async function fetchAppData() {
-            try {
-                const { data: storeData } = await supabaseClient.from('store_info').select('*').limit(1);
-                if (storeData && storeData.length > 0) {
-                    const s = storeData[0];
-                    appData.storeInfo = {
-                        name: s.name || fallbackData.storeInfo.name, 
-                        tagline: s.tagline || fallbackData.storeInfo.tagline, 
-                        lineId: s.line_id || fallbackData.storeInfo.lineId, 
-                        lineLink: s.line_link || fallbackData.storeInfo.lineLink,
-                        fbLink: s.fb_link || fallbackData.storeInfo.fbLink || 'https://www.facebook.com/share/1Cha6DUTZU/',
-                        hours: s.hours || fallbackData.storeInfo.hours, 
-                        duration: s.duration || fallbackData.storeInfo.duration, 
-                        logoImage: s.logo_image || ''
-                    };
-                }
-
-                const { data: catData } = await supabaseClient.from('categories').select('*').order('sort_order', {ascending: true});
-                if (catData && catData.length > 0) {
-                    let cats = catData.map(c => ({ id: c.id, name: c.name, note: c.note }));
-                    
-                    // ดึงหมวดหมู่เช่าแอพพรีเมียม (หรือชื่อเดิมบริการเพิ่มเติม) มาหน้าสุด
-                    const premiumIndex = cats.findIndex(c => c.id === 'extra' || c.name.includes('บริการเพิ่มเติม') || c.name.includes('เช่าแอพพรีเมียม'));
-                    if (premiumIndex !== -1) {
-                        const premiumCat = cats.splice(premiumIndex, 1)[0];
-                        premiumCat.name = '✨ เช่าแอพพรีเมียม'; // บังคับให้เป็นชื่อนี้เสมอ
-                        cats.unshift(premiumCat);
-                    }
-                    appData.categories = cats;
-                }
-
-                const { data: gameData } = await supabaseClient.from('games').select('*, packages(*)').order('sort_order', {ascending: true});
-                if (gameData && gameData.length > 0) {
-                    appData.games = gameData.map(g => ({
-                        id: g.id, categoryId: g.category_id, name: g.name, icon: g.icon, customIcon: g.custom_icon || '', status: g.status,
-                        packages: (g.packages || []).sort((a,b)=>a.sort_order - b.sort_order).map(p => ({ 
-                            id: p.id, name: p.name, price: p.price, image: p.image || ''
-                        }))
-                    }));
-                }
-
-                const { data: payData } = await supabaseClient.from('payments').select('*');
-                if (payData && payData.length > 0) {
-                    const bank = payData.find(p => p.type === 'bank') || {};
-                    const tw = payData.find(p => p.type === 'truewallet') || {};
-                    appData.payments = {
-                        bank: { name: bank.name || fallbackData.payments.bank.name, qrImage: bank.qr_image || '' },
-                        truewallet: { name: tw.name || fallbackData.payments.truewallet.name, phone: tw.phone || '' }
-                    };
-                }
-
-                const { data: noticeData } = await supabaseClient.from('notices_warnings').select('*').order('sort_order', {ascending: true});
-                if (noticeData && noticeData.length > 0) {
-                    const nList = noticeData.filter(n => n.type === 'notice').map(n => n.content);
-                    const wList = noticeData.filter(n => n.type === 'warning').map(n => n.content);
-                    if (nList.length > 0) appData.notices = nList;
-                    if (wList.length > 0) appData.warnings = wList;
-                }
-
-                renderCustomerView();
-            } catch (err) {
-                console.warn('Using fallback data:', err);
-                renderCustomerView();
-            }
-        }
-
-        function renderCustomerView() {
-            const info = appData.storeInfo;
-            if (info.logoImage) {
-                document.getElementById('cv-logoImage').src = info.logoImage;
-                document.getElementById('cv-logoImage').classList.remove('hidden');
-                document.getElementById('cv-logoText').classList.add('hidden');
-            } else {
-                document.getElementById('cv-logoImage').classList.add('hidden');
-                document.getElementById('cv-logoText').classList.remove('hidden');
-            }
-            
-            document.getElementById('cv-storeName').innerHTML = `${info.name || 'SUGAR GAMING'} <span class="relative flex h-2.5 w-2.5 ml-1"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span></span>`;
-            document.getElementById('cv-tagline').innerText = info.tagline || '';
-            document.getElementById('cv-hours').innerText = `${info.hours || ''} | ${info.duration || ''}`;
-            
-            document.getElementById('cv-lineBtn').href = info.lineLink || 'https://lin.ee/u7SBLec';
-            
-            const fbBtn = document.getElementById('cv-fbBtn');
-            if(info.fbLink) {
-                fbBtn.href = info.fbLink; fbBtn.classList.remove('hidden');
-            } else {
-                fbBtn.classList.add('hidden');
-            }
-
-            const noticeEl = document.getElementById('cv-notices');
-            if (appData.notices.length === 0) noticeEl.innerHTML = `<p class="text-center">ไม่มีประกาศในขณะนี้</p>`;
-            else noticeEl.innerHTML = appData.notices.map(n => `<p class="flex items-start gap-2 mb-1 last:mb-0"><span class="text-sugar-500 mt-0.5"><i class="fas fa-bell"></i></span><span>${n}</span></p>`).join('');
-
-            const catContainer = document.getElementById('cv-categories');
-            if (appData.categories.length === 0) catContainer.innerHTML = `<p class="text-sugar-500">ไม่มีหมวดหมู่บริการ</p>`;
-            else {
-                if(!appData.categories.some(c => c.id === activeCategory) && appData.categories.length > 0) activeCategory = appData.categories[0].id;
-                catContainer.innerHTML = appData.categories.map(cat => `<button onclick="setActiveCategory('${cat.id}')" class="flex-shrink-0 px-5 py-2.5 rounded-2xl font-bold transition text-sm ${cat.id === activeCategory ? 'bg-sugar-400 text-white shadow-[0_4px_12px_rgba(255,133,162,0.4)] scale-105' : 'bg-white/80 border-2 border-sugar-100 text-sugar-700 hover:bg-sugar-50'}">${cat.name}</button>`).join('');
-            }
-            renderGamesGrid();
-
-            document.getElementById('cv-bankName').innerText = appData.payments.bank.name || '-';
-            const qrImg = document.getElementById('cv-qrImage'); const qrPlaceholder = document.getElementById('cv-qrPlaceholder');
-            if (appData.payments.bank.qrImage) { qrImg.src = appData.payments.bank.qrImage; qrImg.classList.remove('hidden'); qrPlaceholder.classList.add('hidden'); } 
-            else { qrImg.classList.add('hidden'); qrPlaceholder.classList.remove('hidden'); }
-            
-            document.getElementById('cv-walletName').innerText = appData.payments.truewallet.name || '-';
-            const warningEl = document.getElementById('cv-warnings');
-            if (appData.warnings.length === 0) warningEl.innerHTML = `<li>ไม่มีข้อควรระวัง</li>`;
-            else warningEl.innerHTML = appData.warnings.map(w => `<li class="flex items-start gap-2"><span class="text-red-500 mt-0.5 font-bold">!</span> <span>${w}</span></li>`).join('');
-        }
-
-        function setActiveCategory(catId) { activeCategory = catId; renderCustomerView(); }
-
-        function renderGamesGrid() {
-            const grid = document.getElementById('cv-gamesGrid');
-            const games = appData.games.filter(g => g.categoryId === activeCategory);
-            if(games.length === 0) { grid.innerHTML = `<div class="col-span-full text-center text-sugar-500 font-medium py-10 bg-white/50 rounded-3xl border-2 border-sugar-100 border-dashed">ไม่มีบริการในหมวดหมู่นี้ 🌸</div>`; return; }
-            grid.innerHTML = games.map(game => {
-                const isClosed = game.status === 'closed';
-                const lightHtml = isClosed ? `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span>` : `<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>`;
-                const iconHtml = game.customIcon ? `<img src="${game.customIcon}" alt="${game.name}" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl object-cover shadow-sm mb-3 border-2 border-sugar-50">` : `<div class="text-4xl sm:text-5xl mb-3 drop-shadow-sm">${game.icon || '🎮'}</div>`;
-                return `<div onclick="${isClosed ? '' : `openGameModal('${game.id}')`}" class="cute-card p-4 sm:p-5 text-center relative group ${isClosed ? 'opacity-70 cursor-not-allowed grayscale-[20%]' : 'cursor-pointer'}">
-                    ${isClosed ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-bl-xl rounded-tr-[22px] flex items-center gap-1.5 shadow-sm">${lightHtml} ปิดรับ</div>` : ''}
-                    ${iconHtml}
-                    <div class="text-xs sm:text-sm font-extrabold text-sugar-800 leading-tight flex items-center justify-center gap-1.5">
-                        ${!isClosed ? lightHtml : ''} <span>${game.name}</span>
-                    </div>
-                </div>`
-            }).join('');
-        }
-
-        function openGameModal(gameId) {
-            const game = appData.games.find(g => g.id === gameId);
-            const category = appData.categories.find(c => c.id === game.categoryId);
-            if(!game) return;
-            
-            if (game.customIcon) {
-                document.getElementById('modalIcon').classList.add('hidden');
-                document.getElementById('modalIconImg').src = game.customIcon;
-                document.getElementById('modalIconImg').classList.remove('hidden');
-            } else {
-                document.getElementById('modalIconImg').classList.add('hidden');
-                document.getElementById('modalIcon').innerText = game.icon || '🎮';
-                document.getElementById('modalIcon').classList.remove('hidden');
-            }
-
-            document.getElementById('modalGameName').innerText = game.name;
-            document.getElementById('modalReqType').innerText = category ? category.note : '';
-            
-            const largeImgContainer = document.getElementById('modalLargeImageContainer');
-            const largeImg = document.getElementById('modalLargeImage');
-            if (game.customIcon) {
-                largeImg.src = game.customIcon;
-                largeImgContainer.classList.remove('hidden');
-            } else {
-                largeImgContainer.classList.add('hidden');
-            }
-
-            const warningEl = document.getElementById('modalStatusWarning'); const orderBtn = document.getElementById('modalOrderBtn'); const listEl = document.getElementById('packagesList');
-            
-            if(game.status === 'closed') { warningEl.classList.remove('hidden'); orderBtn.classList.add('opacity-50', 'pointer-events-none'); } 
-            else { warningEl.classList.add('hidden'); orderBtn.classList.remove('opacity-50', 'pointer-events-none'); orderBtn.href = appData.storeInfo.lineLink; }
-
-            if(!game.packages || game.packages.length === 0) {
-                listEl.innerHTML = `<p class="text-center text-sugar-500 py-6 font-medium">ยังไม่มีแพ็กเกจราคา 🌸</p>`;
-            } else {
-                listEl.innerHTML = game.packages.map(pkg => `
-                    <div class="bg-white p-3.5 rounded-2xl border-2 border-sugar-100 flex justify-between items-center shadow-sm hover:border-sugar-300 transition">
-                        <div class="flex items-center gap-3">
-                            ${pkg.image ? `<img src="${pkg.image}" class="w-11 h-11 rounded-xl object-cover border border-sugar-50 shadow-sm">` : `<div class="w-11 h-11 rounded-xl bg-sugar-50 flex items-center justify-center text-sugar-300 border border-sugar-100 text-lg"><i class="fas fa-gift"></i></div>`}
-                            <span class="font-extrabold text-sugar-800 text-sm sm:text-base">${pkg.name}</span>
-                        </div>
-                        <span class="font-extrabold text-sugar-600 bg-sugar-50 px-3.5 py-1.5 rounded-xl text-sm sm:text-base border border-sugar-100 shadow-sm">${pkg.price} ฿</span>
-                    </div>
-                `).join('');
-            }
-            document.getElementById('gameModal').classList.remove('hidden');
-        }
-
-        function toggleAdminLogin() { document.getElementById('adminEmail').value = ''; document.getElementById('adminPassword').value = ''; document.getElementById('loginErrorMsg').classList.add('hidden'); document.getElementById('adminLoginModal').classList.remove('hidden'); }
-        
-        async function handleSupabaseLogin() {
-            const email = document.getElementById('adminEmail').value.trim(); const password = document.getElementById('adminPassword').value.trim(); const errEl = document.getElementById('loginErrorMsg'); const btn = document.getElementById('btnLoginSubmit');
-            if (!email || !password) { errEl.innerText = 'กรุณากรอกให้ครบถ้วน'; errEl.classList.remove('hidden'); return; }
-            btn.disabled = true; btn.innerText = 'กำลังตรวจสอบ...';
-            try {
-                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (authError || !authData.user) throw new Error('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
-                const { data: isAdmin, error: rpcError } = await supabaseClient.rpc('is_admin');
-                if (rpcError || !isAdmin) { await supabaseClient.auth.signOut(); throw new Error('ไม่มีสิทธิ์เข้าถึงระบบหลังบ้าน'); }
-                closeModal('adminLoginModal'); document.getElementById('customerView').classList.add('hidden'); document.getElementById('adminView').classList.remove('hidden'); document.getElementById('adminView').classList.add('flex'); initAdminDashboard();
-            } catch (err) { errEl.innerText = err.message; errEl.classList.remove('hidden'); } finally { btn.disabled = false; btn.innerText = 'เข้าสู่ระบบ'; }
-        }
-
-        async function logoutAdmin() { await supabaseClient.auth.signOut(); document.getElementById('adminView').classList.add('hidden'); document.getElementById('adminView').classList.remove('flex'); document.getElementById('customerView').classList.remove('hidden'); fetchAppData(); window.scrollTo(0,0); }
-
-        function switchAdminTab(tabId) {
-            document.querySelectorAll('.admin-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); }); document.getElementById(`content-${tabId}`).classList.remove('hidden'); document.getElementById(`content-${tabId}`).classList.add('block');
-            document.querySelectorAll('.admin-tab').forEach(el => { el.classList.remove('bg-sugar-50', 'text-sugar-600'); }); document.getElementById(`tab-${tabId}`)?.classList.add('bg-sugar-50', 'text-sugar-600');
-        }
-
-        function initAdminDashboard() {
-            switchAdminTab('info');
-            const info = appData.storeInfo;
-            if (info.logoImage) { document.getElementById('adm-logoPreview').src = info.logoImage; document.getElementById('adm-logoPreview').classList.remove('hidden'); document.getElementById('adm-logoPlaceholder').classList.add('hidden'); }
-            document.getElementById('adm-storeName').value = info.name || ''; 
-            document.getElementById('adm-tagline').value = info.tagline || ''; 
-            document.getElementById('adm-lineId').value = info.lineId || ''; 
-            document.getElementById('adm-lineLink').value = info.lineLink || ''; 
-            document.getElementById('adm-fbLink').value = info.fbLink || 'https://www.facebook.com/share/1Cha6DUTZU/'; 
-            document.getElementById('adm-hours').value = info.hours || ''; 
-            document.getElementById('adm-duration').value = info.duration || '';
-            
-            document.getElementById('adm-bankName').value = appData.payments.bank.name || '';
-            if(appData.payments.bank.qrImage) { document.getElementById('adm-qrPreview').src = appData.payments.bank.qrImage; document.getElementById('adm-qrPreview').classList.remove('hidden'); document.getElementById('adm-qrPlaceholder').classList.add('hidden'); }
-            document.getElementById('adm-walletName').value = appData.payments.truewallet.name || '';
-            renderAdminGamesList(); renderAdminLists('notices'); renderAdminLists('warnings');
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast'); toast.querySelector('#toastMsg').innerText = msg; toast.classList.remove('translate-x-full'); setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
-        }
-
-        async function handleLogoUpload(event) {
-            if(!event.target.files[0]) return;
-            try { const b64 = await compressImage(event.target.files[0], 300, 300); appData.storeInfo.logoImage = b64; document.getElementById('adm-logoPreview').src = b64; document.getElementById('adm-logoPreview').classList.remove('hidden'); document.getElementById('adm-logoPlaceholder').classList.add('hidden'); } catch(e) { alert(e.message); }
-        }
-        function removeLogo() { appData.storeInfo.logoImage = ""; document.getElementById('adm-logoPreview').classList.add('hidden'); document.getElementById('adm-logoPlaceholder').classList.remove('hidden'); document.getElementById('adm-logoInput').value = ''; }
-        
-        async function saveStoreInfo(btn) {
-            btn.disabled = true;
-            try {
-                const fbUrl = document.getElementById('adm-fbLink').value;
-                const infoData = { 
-                    name: document.getElementById('adm-storeName').value, 
-                    tagline: document.getElementById('adm-tagline').value, 
-                    line_id: document.getElementById('adm-lineId').value, 
-                    line_link: document.getElementById('adm-lineLink').value, 
-                    hours: document.getElementById('adm-hours').value, 
-                    duration: document.getElementById('adm-duration').value, 
-                    logo_image: appData.storeInfo.logoImage 
-                };
-                try { infoData.fb_link = fbUrl; } catch(e) {}
-
-                appData.storeInfo.fbLink = fbUrl;
-                const { data: existing } = await supabaseClient.from('store_info').select('id').limit(1);
-                if (existing && existing.length > 0) await supabaseClient.from('store_info').update(infoData).eq('id', existing[0].id); else await supabaseClient.from('store_info').insert([infoData]);
-                await fetchAppData(); showToast('บันทึกสำเร็จ');
-            } catch (err) { alert('บันทึกข้อมูลเรียบร้อย'); } finally { btn.disabled = false; }
-        }
-
-        async function handleImageUpload(event, previewId) {
-            if(!event.target.files[0]) return;
-            try { const b64 = await compressImage(event.target.files[0], 400, 400); appData.payments.bank.qrImage = b64; document.getElementById(previewId).src = b64; document.getElementById(previewId).classList.remove('hidden'); document.getElementById('adm-qrPlaceholder').classList.add('hidden'); } catch(e) { alert(e.message); }
-        }
-
-        async function savePaymentInfo(btn) {
-            btn.disabled = true;
-            try {
-                const bankName = document.getElementById('adm-bankName').value; const qrImg = appData.payments.bank.qrImage; const twName = document.getElementById('adm-walletName').value;
-                const { data: bRows } = await supabaseClient.from('payments').select('id').eq('type', 'bank');
-                if (bRows && bRows.length > 0) await supabaseClient.from('payments').update({ name: bankName, qr_image: qrImg }).eq('id', bRows[0].id); else await supabaseClient.from('payments').insert([{ type: 'bank', name: bankName, qr_image: qrImg }]);
-                const { data: twRows } = await supabaseClient.from('payments').select('id').eq('type', 'truewallet');
-                if (twRows && twRows.length > 0) await supabaseClient.from('payments').update({ name: twName }).eq('id', twRows[0].id); else await supabaseClient.from('payments').insert([{ type: 'truewallet', name: twName }]);
-                await fetchAppData(); showToast('บันทึกสำเร็จ');
-            } catch (err) { alert(err.message); } finally { btn.disabled = false; }
-        }
-
-        function renderAdminLists(type) { const c = document.getElementById(`adm-${type}List`); if (!c) return; c.innerHTML = appData[type].map((item, index) => `<div class="flex justify-between items-center bg-white border border-gray-200 p-2.5 rounded-xl text-sm font-medium text-gray-700 shadow-sm"><span class="truncate w-5/6">${item}</span><button onclick="removeListItem('${type}', ${index})" class="text-red-400 hover:text-red-600 px-2 transition"><i class="fas fa-trash"></i></button></div>`).join(''); }
-        function addListItem(type, inputId) { const v = document.getElementById(inputId).value.trim(); if(v) { appData[type].push(v); document.getElementById(inputId).value = ''; renderAdminLists(type); } }
-        function removeListItem(type, index) { appData[type].splice(index, 1); renderAdminLists(type); }
-        
-        async function saveNotices(btn) {
-            btn.disabled = true;
-            try {
-                await supabaseClient.from('notices_warnings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-                const rows = [];
-                appData.notices.forEach((c, idx) => rows.push({ type: 'notice', content: c, sort_order: idx }));
-                appData.warnings.forEach((c, idx) => rows.push({ type: 'warning', content: c, sort_order: idx }));
-                if (rows.length > 0) await supabaseClient.from('notices_warnings').insert(rows);
-                await fetchAppData(); showToast('บันทึกสำเร็จ');
-            } catch (err) { alert(err.message); } finally { btn.disabled = false; }
-        }
-
-        function renderAdminGamesList() {
-            const filterEl = document.getElementById('adm-gameFilter');
-            const currentFilter = filterEl.value;
-            filterEl.innerHTML = `<option value="all">ทั้งหมด</option>` + appData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-            filterEl.value = currentFilter || 'all';
-
-            const tbody = document.getElementById('adm-gamesListBody'); const filterVal = filterEl.value;
-            let games = appData.games; if(filterVal !== 'all') games = games.filter(g => g.categoryId === filterVal);
-            if(games.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-sugar-500 font-medium">ไม่มีบริการในหมวดหมู่นี้</td></tr>`; return; }
-            tbody.innerHTML = games.map(g => {
-                const cName = appData.categories.find(c => c.id === g.categoryId)?.name || 'Unknown';
-                const sHtml = g.status === 'open' ? `<span class="bg-green-50 text-green-600 border border-green-200 px-2.5 py-1 rounded-lg text-xs font-bold">เปิดรับ</span>` : `<span class="bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-bold">ปิดรับ</span>`;
-                const iHtml = g.customIcon ? `<img src="${g.customIcon}" class="w-12 h-12 object-cover rounded-xl mx-auto shadow-sm border border-gray-100">` : `<span class="text-3xl">${g.icon || '🎮'}</span>`;
-                return `<tr class="border-b border-gray-100 hover:bg-sugar-50/30 transition"><td class="p-3 text-center">${iHtml}</td><td class="p-3 font-bold text-gray-800">${g.name}</td><td class="p-3 text-gray-500 font-medium text-sm">${cName}</td><td class="p-3 text-center">${sHtml}</td><td class="p-3 text-center text-gray-500 font-bold">${g.packages ? g.packages.length : 0}</td><td class="p-3 text-center"><button onclick="openEditGameModal('${g.id}')" class="bg-sugar-100 text-sugar-600 hover:bg-sugar-200 px-4 py-2 rounded-xl transition text-sm font-bold shadow-sm">จัดการ</button></td></tr>`;
-            }).join('');
-        }
-
-        function openEditGameModal(gameId = null) {
-            currentEditGameId = gameId; const tbody = document.getElementById('admPackagesBody');
-            
-            const catSelect = document.getElementById('editGameCategory');
-            catSelect.innerHTML = appData.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-
-            if (gameId) {
-                const g = appData.games.find(g => g.id === gameId); if(!g) return;
-                document.getElementById('admGameModalTitle').innerText = 'แก้ไขเกมและราคา';
-                document.getElementById('editGameId').value = g.id; document.getElementById('editGameName').value = g.name; document.getElementById('editGameCategory').value = g.categoryId; document.getElementById('editGameIcon').value = g.icon || '🎮'; document.getElementById('editGameStatus').value = g.status; document.getElementById('editGameCustomIcon').value = g.customIcon || '';
-                if (g.customIcon) { document.getElementById('adm-gameIconPreview').src = g.customIcon; document.getElementById('adm-gameIconPreview').classList.remove('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.add('hidden'); } else { document.getElementById('adm-gameIconPreview').classList.add('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden'); }
-                document.getElementById('btnDeleteGame').classList.remove('hidden');
-                tbody.innerHTML = '';
-                if(g.packages && g.packages.length > 0) g.packages.forEach((pkg) => addPackageRow(pkg.name, pkg.price, pkg.image)); else addPackageRow('', '', '');
-            } else {
-                document.getElementById('admGameModalTitle').innerText = 'เพิ่มบริการใหม่';
-                document.getElementById('editGameId').value = 'new_' + Date.now(); document.getElementById('editGameName').value = ''; 
-                if(appData.categories.length > 0) document.getElementById('editGameCategory').value = appData.categories[0].id;
-                document.getElementById('editGameIcon').value = '🎮'; document.getElementById('editGameStatus').value = 'open'; document.getElementById('editGameCustomIcon').value = '';
-                document.getElementById('adm-gameIconPreview').classList.add('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden'); document.getElementById('btnDeleteGame').classList.add('hidden');
-                tbody.innerHTML = ''; addPackageRow('', '', '');
-            }
-            document.getElementById('admGameModal').classList.remove('hidden');
-        }
-
-        async function handleGameIconUpload(event) {
-            if(!event.target.files[0]) return;
-            try { const b64 = await compressImage(event.target.files[0], 600, 600); document.getElementById('editGameCustomIcon').value = b64; document.getElementById('adm-gameIconPreview').src = b64; document.getElementById('adm-gameIconPreview').classList.remove('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.add('hidden'); } catch(e) { alert(e.message); }
-        }
-        function removeGameIcon() { document.getElementById('editGameCustomIcon').value = ''; document.getElementById('adm-gameIconPreview').classList.add('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden'); document.getElementById('adm-gameIconInput').value=''; }
-
-        async function handlePackageImageUpload(event, inputEl) {
-            if(!event.target.files[0]) return;
-            try {
-                const b64 = await compressImage(event.target.files[0], 200, 200);
-                const container = inputEl.closest('.relative');
-                container.querySelector('.pkg-img-preview').src = b64;
-                container.querySelector('.pkg-img-preview').classList.remove('hidden');
-                container.querySelector('.pkg-img-placeholder').classList.add('hidden');
-                container.querySelector('.pkg-img-val').value = b64;
-            } catch(e) { alert('ประมวลผลรูปภาพผิดพลาด: ' + e.message); }
-        }
-
-        function addPackageRow(name, price, image = '') {
-            const tbody = document.getElementById('admPackagesBody'); if(!tbody) return;
-            const rowCount = tbody.children.length + 1;
-            const tr = document.createElement('tr'); tr.className = "border-b border-gray-100 package-row hover:bg-sugar-50/50 transition";
-            tr.innerHTML = `
-                <td class="p-3 text-center text-gray-500 font-bold row-num">${rowCount}</td>
-                <td class="p-3 text-center">
-                    <div class="relative w-12 h-12 mx-auto border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden hover:bg-gray-100 hover:border-sugar-300 transition cursor-pointer shadow-sm">
-                        <img src="${image}" class="w-full h-full object-cover pkg-img-preview ${image ? '' : 'hidden'}">
-                        <span class="text-gray-400 text-sm pkg-img-placeholder ${image ? 'hidden' : ''}"><i class="fas fa-image"></i></span>
-                        <input type="file" accept="image/*" onchange="handlePackageImageUpload(event, this)" class="absolute inset-0 opacity-0 cursor-pointer" title="อัปโหลดรูปแพ็กเกจ">
-                        <input type="hidden" class="pkg-img-val" value="${image}">
-                    </div>
-                </td>
-                <td class="p-3"><input type="text" value="${name}" placeholder="เช่น 100 เพชร" class="w-full border border-gray-200 rounded-xl p-2.5 pkg-name bg-white outline-none focus:border-sugar-300 font-medium text-gray-700"></td>
-                <td class="p-3"><input type="number" value="${price}" placeholder="ราคา" class="w-full border border-gray-200 rounded-xl p-2.5 pkg-price bg-white outline-none focus:border-sugar-300 font-bold text-gray-700"></td>
-                <td class="p-3 text-center"><button type="button" onclick="this.closest('tr').remove(); updateRowNumbers();" class="text-red-400 hover:text-red-600 bg-red-50 p-2.5 rounded-xl transition"><i class="fas fa-trash"></i></button></td>
-            `;
-            tbody.appendChild(tr);
-        }
-
-        function updateRowNumbers() { document.querySelectorAll('.package-row .row-num').forEach((td, idx) => td.innerText = idx + 1); }
-
-        async function saveGameData(btn) {
-            const idInput = document.getElementById('editGameId').value; 
-            const name = document.getElementById('editGameName').value.trim();
-            const categoryId = document.getElementById('editGameCategory').value;
-
-            if(!name) { alert("กรุณากรอกชื่อบริการ"); return; }
-            if(!categoryId) { alert("กรุณาเลือกหมวดหมู่บริการ"); return; }
-
-            btn.disabled = true;
-            try {
-                let gameId = idInput; if (idInput.startsWith('new_')) gameId = 'g_' + Date.now();
-                const gamePayload = { 
-                    id: gameId, 
-                    category_id: categoryId, 
-                    name: name, 
-                    icon: document.getElementById('editGameIcon').value || '🎮', 
-                    custom_icon: document.getElementById('editGameCustomIcon').value, 
-                    status: document.getElementById('editGameStatus').value 
-                };
-                
-                const { error: gameErr } = await supabaseClient.from('games').upsert([gamePayload]); 
-                if (gameErr) throw gameErr;
-
-                await supabaseClient.from('packages').delete().eq('game_id', gameId);
-                const packageRows = [];
-                document.querySelectorAll('.package-row').forEach((row, idx) => {
-                    const pName = row.querySelector('.pkg-name').value.trim();
-                    const pPrice = row.querySelector('.pkg-price').value;
-                    const pImage = row.querySelector('.pkg-img-val').value;
-                    if(pName) packageRows.push({ id: 'p_' + gameId + '_' + idx + '_' + Date.now(), game_id: gameId, name: pName, price: pPrice ? parseFloat(pPrice) : 0, image: pImage, sort_order: idx });
-                });
-                if (packageRows.length > 0) {
-                    const { error: pkgErr } = await supabaseClient.from('packages').insert(packageRows);
-                    if (pkgErr) throw pkgErr;
-                }
-
-                await fetchAppData(); closeModal('admGameModal'); renderAdminGamesList(); showToast('บันทึกสำเร็จ');
-            } catch (err) { alert('เกิดข้อผิดพลาด: ' + err.message); } finally { btn.disabled = false; }
-        }
-
-        async function deleteCurrentGame(btn) {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเกมนี้?')) {
-                btn.disabled = true;
-                try {
-                    const { error } = await supabaseClient.from('games').delete().eq('id', document.getElementById('editGameId').value);
-                    if (error) throw error;
-                    await fetchAppData(); closeModal('admGameModal'); renderAdminGamesList(); showToast('ลบสำเร็จ');
-                } catch (err) { alert(err.message); } finally { btn.disabled = false; }
-            }
-        }
-
-        function closeModal(id) { const el = document.getElementById(id); if(el) el.classList.add('hidden'); }
-        function scrollToSection(id) { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); }
-        window.onclick = function(event) { ['gameModal', 'adminLoginModal', 'admGameModal'].forEach(id => { if (event.target === document.getElementById(id)) closeModal(id); }); };
-        
-        window.onload = () => {
-            fetchAppData();
-        };
-    </script>
+<div id="animated-bg" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+<div class="bg-wave-stream"></div>
+<div class="bg-wave-stream" style="bottom: -50px; opacity: 0.7; animation-duration: 25s; animation-direction: reverse;"></div>
+<div class="bg-cloud top-[10%] opacity-80" style="animation-duration: 45s; font-size: 5rem;">☁️</div>
+<div class="bg-cloud top-[35%] opacity-60" style="animation-duration: 60s; animation-delay: -25s; font-size: 4rem;">☁️</div>
+<div class="bg-cloud top-[65%] opacity-90" style="animation-duration: 50s; animation-delay: -10s; font-size: 6rem;">☁️</div>
+<div class="bg-cloud top-[85%] opacity-50" style="animation-duration: 70s; animation-delay: -40s; font-size: 3.5rem;">☁️</div>
+<div class="bg-heart left-[10%]" style="animation-duration: 15s; animation-delay: 0s; font-size: 2rem;">🤍</div>
+<div class="bg-heart left-[25%]" style="animation-duration: 19s; animation-delay: -5s; font-size: 1.5rem; color:#FFB7D5;">🩷</div>
+<div class="bg-heart left-[45%]" style="animation-duration: 14s; animation-delay: -10s; font-size: 2.5rem;">🤍</div>
+<div class="bg-heart left-[65%]" style="animation-duration: 22s; animation-delay: -7s; font-size: 1.8rem; color:#FFB7D5;">🩷</div>
+<div class="bg-heart left-[85%]" style="animation-duration: 17s; animation-delay: -2s; font-size: 2.2rem;">🤍</div>
+<div class="bg-heart left-[95%]" style="animation-duration: 20s; animation-delay: -12s; font-size: 1.5rem; color:#FFB7D5;">✨</div>
+</div>
+<!-- ==================== CUSTOMER VIEW ==================== -->
+<div id="customerView" class="flex-grow flex flex-col w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-md shadow-[0_0_40px_rgba(255,183,213,0.3)] min-h-screen relative z-10 border-x border-white/50">
+<header class="sticky top-0 z-40 bg-sugar-300 text-sugar-800 shadow-md border-b-2 border-white/50">
+<div class="px-4 py-3 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<h1 id="cv-storeName" class="text-xl font-extrabold tracking-wide flex items-center gap-2 drop-shadow-sm">SUGAR GAMING</h1>
+</div>
+<button onclick="scrollToSection('contact')" class="bg-white text-sugar-600 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm hover:bg-sugar-50 border border-sugar-100 transition">
+ติดต่อเรา
+</button>
+</div>
+</header>
+<section class="relative bg-gradient-to-b from-sugar-200 via-sugar-100 to-sugar-50 pt-10 pb-8 px-4 text-center overflow-hidden border-b-4 border-white">
+<div class="absolute inset-0 z-0 pointer-events-none">
+<div class="hero-cloud top-[10%] text-5xl opacity-80" style="animation-duration: 25s; animation-delay: 0s;">☁️</div>
+<div class="hero-cloud top-[45%] text-6xl opacity-60" style="animation-duration: 35s; animation-delay: -15s;">☁️</div>
+<div class="hero-cloud top-[25%] text-7xl opacity-90" style="animation-duration: 28s; animation-delay: -8s;">☁️</div>
+<div class="hero-cloud top-[60%] text-4xl opacity-70" style="animation-duration: 22s; animation-delay: -5s;">☁️</div>
+</div>
+<div class="flex justify-center mb-5 relative z-10">
+<div class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full shadow-[0_8px_25px_rgba(255,133,162,0.4)] bg-white border-[6px] border-white z-10 p-1 transform hover:scale-105 transition duration-300">
+<img id="cv-logoImage" src="" alt="SUGAR GAMING Logo" class="w-full h-full object-cover rounded-full hidden">
+<span id="cv-logoText" class="text-6xl flex items-center justify-center w-full h-full">🎀</span>
+</div>
+</div>
+<h2 id="cv-tagline" class="text-2xl md:text-3xl font-extrabold text-sugar-800 mb-2 z-10 relative drop-shadow-sm">บริการเติมเกมออนไลน์</h2>
+<div class="flex items-center justify-center gap-2 mb-6 z-10 relative">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation-duration: 1.5s;"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-[0_0_8px_#22c55e]"></span>
+</span>
+<p id="cv-hours" class="text-sugar-700 font-bold text-sm sm:text-base">เปิดให้บริการทุกวัน | ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว</p>
+</div>
+<div class="flex flex-wrap justify-center items-center gap-3 mb-6 z-10 relative px-4 w-full max-w-xl mx-auto">
+<a id="cv-lineBtn" href="https://lin.ee/u7SBLec" target="_blank" class="flex-1 min-w-[150px] justify-center flex items-center gap-2 bg-[#00B900] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#009900] transition transform hover:-translate-y-1">
+<i class="fab fa-line text-2xl"></i> ทักแชท LINE
+</a>
+<a id="cv-fbBtn" href="https://www.facebook.com/share/1Cha6DUTZU/" target="_blank" class="flex-1 min-w-[150px] justify-center flex items-center gap-2 bg-[#1877F2] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#166FE5] transition transform hover:-translate-y-1">
+<i class="fab fa-facebook text-2xl"></i> Facebook
+</a>
+</div>
+<!-- Notices -->
+<div id="cv-notices" class="bg-white/80 backdrop-blur border-2 border-sugar-200 text-sugar-800 rounded-3xl p-4 text-sm max-w-2xl mx-auto text-left shadow-sm font-medium">
+<p>📌 ช่วงกิจกรรมหรือมีคิวจำนวนมาก อาจใช้เวลานานกว่าปกติ</p>
+<p>📌 เรทราคาอาจมีการเปลี่ยนแปลงขึ้นลงตามกลไกตลาด</p>
+</div>
+</section>
+<main class="flex-grow p-4 sm:p-6">
+<h3 class="text-xl font-extrabold text-sugar-800 mb-4 flex items-center gap-2">
+<i class="fas fa-star text-yellow-400 drop-shadow-sm"></i> เลือกบริการ
+</h3>
+<div id="cv-categories" class="flex overflow-x-auto hide-scroll gap-3 pb-4 mb-2 -mx-4 px-4 sm:mx-0 sm:px-0"></div>
+<div id="cv-gamesGrid" class="grid grid-cols-2 min-[400px]:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 mt-2"></div>
+<div class="flex items-center justify-center gap-4 text-sugar-300 mb-10">
+<span class="w-16 h-0.5 bg-sugar-200 rounded-full"></span>
+<i class="fas fa-heart text-sugar-400"></i>
+<span class="w-16 h-0.5 bg-sugar-200 rounded-full"></span>
+</div>
+<section id="contact" class="mb-8">
+<h3 class="text-xl font-extrabold text-sugar-800 mb-4 flex items-center gap-2">
+<i class="fas fa-wallet text-sugar-500 drop-shadow-sm"></i> ช่องทางการชำระเงิน
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+<!-- Bank -->
+<div class="cute-card p-6 text-center">
+<div class="bg-blue-100 text-blue-600 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm border border-blue-200">
+<i class="fas fa-university"></i>
+</div>
+<h4 class="font-extrabold text-sugar-800 text-lg">โอนผ่านธนาคาร</h4>
+<div class="w-48 h-48 mx-auto my-4 rounded-2xl shadow-inner border-4 border-white bg-gray-50 overflow-hidden flex items-center justify-center">
+<img id="cv-qrImage" src="" alt="QR Code" class="w-full h-full object-contain hidden">
+<span id="cv-qrPlaceholder" class="text-gray-400 text-sm font-medium">ยังไม่มีรูป QR</span>
+</div>
+<p class="text-sm text-sugar-600 font-medium">ชื่อบัญชี</p>
+<p id="cv-bankName" class="font-extrabold text-sugar-800 text-lg">เติมเกมกับเพจ Sugar Gaming – บริการเติมเกม</p>
+</div>
+<!-- TrueWallet -->
+<div class="cute-card p-6 text-center flex flex-col justify-center">
+<div class="bg-orange-100 text-orange-500 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm border border-orange-200">
+<i class="fas fa-wallet"></i>
+</div>
+<h4 class="font-extrabold text-sugar-800 text-lg">TrueMoney Wallet</h4>
+<p class="text-sm text-sugar-600 font-medium mt-6">ชื่อบัญชี</p>
+<p id="cv-walletName" class="font-extrabold text-sugar-800 text-2xl mt-1">ฑิฑัมพร</p>
+<div class="mt-6 p-4 bg-orange-50 rounded-2xl border border-orange-200 text-left shadow-inner">
+<p class="text-sm text-orange-800 font-medium leading-relaxed">⚠️ <b>ระวัง:</b> เบอร์ TrueWallet มีการเปลี่ยนแปลงบ่อย
+กรุณาสอบถามแอดมินทาง LINE ก่อนโอนทุกครั้งนะคะ 💖</p>
+</div>
+</div>
+</div>
+<!-- Warnings -->
+<div class="bg-white/90 border-2 border-red-200 rounded-3xl p-5 shadow-sm">
+<h4 class="font-extrabold text-red-500 mb-3 flex items-center gap-2">
+<i class="fas fa-exclamation-circle"></i> แจ้งเตือนลูกค้าทุกท่าน
+</h4>
+<ul id="cv-warnings" class="list-none space-y-2.5 text-sm text-sugar-800 font-medium">
+<li>ตรวจสอบบัญชีร้านก่อนโอนทุกครั้ง</li>
+<li>เฟซจริงมีเครื่องหมายยืนยันตัวตน</li>
+<li>ทางร้านไม่รับผิดชอบทุกกรณีหากโอนผิด</li>
+<li>ไม่รับกลาง ไม่รับแลกเงิน ไม่รับฝากซื้อ-ขายไอดี ไม่รับยืมเงิน</li>
+</ul>
+</div>
+</section>
+</main>
+<footer class="bg-sugar-300 text-sugar-800 text-center py-8 mt-auto rounded-t-[40px] relative border-t-4 border-white shadow-[0_-10px_20px_rgba(255,183,213,0.2)]">
+<p class="font-extrabold text-2xl mb-1 flex justify-center items-center gap-2">
+<i class="fas fa-star text-white text-base"></i> SUGAR GAMING <i class="fas fa-star text-white text-base"></i>
+</p>
+<p class="text-sm font-semibold opacity-80">เติมเกมง่าย • รวดเร็ว • ปลอดภัย 100%</p>
+<button onclick="toggleAdminLogin()" class="absolute bottom-4 right-4 opacity-20 hover:opacity-100 text-xs font-bold bg-white/50 px-3 py-1.5 rounded-full transition">
+<i class="fas fa-cog"></i> Admin
+</button>
+</footer>
+</div>
+<!-- Game Packages Modal -->
+<div id="gameModal" class="fixed inset-0 z-50 hidden bg-sugar-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-white rounded-[32px] w-full max-w-lg max-h-[90vh] flex flex-col modal-enter overflow-hidden relative border-[6px] border-white shadow-2xl">
+<div id="modalHeader" class="bg-sugar-300 p-5 text-sugar-800 flex items-center gap-4 border-b-2 border-white">
+<div id="modalIconContainer" class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm border-2 border-sugar-100">
+<span id="modalIcon" class="text-4xl"></span>
+<img id="modalIconImg" src="" alt="Game Icon" class="w-full h-full object-cover hidden">
+</div>
+<div>
+<h3 id="modalGameName" class="font-extrabold text-2xl flex items-center gap-2">Game Name</h3>
+<p id="modalReqType" class="text-xs bg-white text-sugar-600 font-bold px-3 py-1 rounded-full inline-block mt-1.5 shadow-sm border border-sugar-100">Requirement</p>
+</div>
+<button onclick="closeModal('gameModal')" class="ml-auto text-sugar-500 hover:text-sugar-700 text-3xl absolute top-4 right-4 bg-white/50 w-8 h-8 flex items-center justify-center rounded-full transition">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="p-4 overflow-y-auto bg-sugar-50 flex-grow space-y-4" id="modalPackagesBody">
+<div id="modalStatusWarning" class="hidden bg-red-100 text-red-600 p-4 rounded-2xl text-center font-extrabold border-2 border-red-200">
+❌ ปิดรับบริการชั่วคราว
+</div>
+<div id="modalLargeImageContainer" class="hidden w-full bg-white rounded-2xl p-2 border-2 border-sugar-100 shadow-sm overflow-hidden text-center">
+<img id="modalLargeImage" src="" alt="Rate Preview" class="w-full h-auto max-h-72 object-contain rounded-xl mx-auto">
+</div>
+<div id="packagesList" class="space-y-3"></div>
+</div>
+<div class="p-5 bg-white border-t-2 border-sugar-100 text-center">
+<a id="modalOrderBtn" href="#" target="_blank" class="block w-full bg-sugar-500 hover:bg-sugar-600 text-white font-extrabold text-lg py-4 rounded-2xl shadow-[0_4px_15px_rgba(255,133,162,0.4)] transition transform hover:-translate-y-1">
+<i class="fab fa-line mr-1"></i> สั่งซื้อผ่าน LINE เลย!
+</a>
+</div>
+</div>
+</div>
+<!-- Admin Login Modal -->
+<div id="adminLoginModal" class="fixed inset-0 z-50 hidden bg-sugar-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-white rounded-3xl w-full max-w-sm p-8 modal-enter text-center shadow-2xl border-4 border-sugar-100">
+<div class="text-5xl mb-4">🎀</div>
+<h3 class="text-2xl font-extrabold text-sugar-800 mb-2">ระบบหลังบ้าน</h3>
+<p class="text-sm text-sugar-500 font-medium mb-6">กรุณาเข้าสู่ระบบ (Admin Only)</p>
+<div id="loginErrorMsg" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-bold rounded-xl"></div>
+<input type="email" id="adminEmail" placeholder="อีเมลแอดมิน" class="w-full border-2 border-sugar-100 p-3.5 rounded-xl mb-3 focus:outline-none focus:border-sugar-400 text-sm font-medium">
+<input type="password" id="adminPassword" placeholder="รหัสผ่าน" class="w-full border-2 border-sugar-100 p-3.5 rounded-xl mb-6 focus:outline-none focus:border-sugar-400 text-sm font-medium">
+<div class="flex gap-3">
+<button onclick="closeModal('adminLoginModal')" class="flex-1 bg-sugar-100 text-sugar-700 hover:bg-sugar-200 py-3 rounded-xl font-bold transition">ยกเลิก</button>
+<button onclick="handleSupabaseLogin()" id="btnLoginSubmit" class="flex-1 bg-sugar-500 hover:bg-sugar-600 text-white py-3 rounded-xl font-bold shadow-md transition">เข้าสู่ระบบ</button>
+</div>
+</div>
+</div>
+<!-- ==================== ADMIN VIEW ==================== -->
+<div id="adminView" class="hidden flex-grow flex flex-col w-full max-w-6xl mx-auto bg-gray-50 min-h-screen">
+<header class="bg-sugar-800 text-white p-4 flex justify-between items-center sticky top-0 z-40 shadow-md">
+<div class="flex items-center gap-3">
+<i class="fas fa-cogs text-sugar-300 text-xl"></i>
+<h1 class="font-bold text-lg">Admin Dashboard | 🎀</h1>
+</div>
+<button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm font-bold shadow transition flex items-center gap-2">
+<i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+</button>
+</header>
+<div class="flex flex-col md:flex-row flex-grow">
+<aside class="w-full md:w-64 bg-white shadow-md flex-shrink-0 md:min-h-[calc(100vh-68px)] z-30 relative border-r border-gray-100">
+<nav class="flex flex-row md:flex-col p-3 gap-2 overflow-x-auto hide-scroll md:overflow-visible font-medium">
+<button onclick="switchAdminTab('info')" id="tab-info" class="admin-tab active flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
+<i class="fas fa-store w-6 text-sugar-400"></i> ข้อมูลร้าน
+</button>
+<button onclick="switchAdminTab('games')" id="tab-games" class="admin-tab flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
+<i class="fas fa-gamepad w-6 text-sugar-400"></i> จัดการเกม & ราคา
+</button>
+<button onclick="switchAdminTab('payment')" id="tab-payment" class="admin-tab flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
+<i class="fas fa-money-bill-wave w-6 text-sugar-400"></i> ช่องทางชำระเงิน
+</button>
+<button onclick="switchAdminTab('notices')" id="tab-notices" class="admin-tab flex-shrink-0 text-left px-4 py-3.5 rounded-xl text-gray-600 hover:bg-sugar-50 whitespace-nowrap transition">
+<i class="fas fa-bullhorn w-6 text-sugar-400"></i> ประกาศ & แจ้งเตือน
+</button>
+</nav>
+</aside>
+<main class="flex-grow p-4 md:p-6 relative">
+<div id="toast" class="fixed top-24 right-4 bg-green-500 text-white px-6 py-3.5 rounded-xl shadow-xl transform translate-x-full transition-transform duration-300 z-50 flex items-center gap-3 font-bold border-2 border-white">
+<i class="fas fa-check-circle text-xl"></i> <span id="toastMsg">บันทึกสำเร็จ</span>
+</div>
+<!-- TAB 1 -->
+<div id="content-info" class="admin-content block space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-sugar-300"></div>
+<h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
+<i class="fas fa-image text-sugar-400"></i> โลโก้ร้านค้า
+</h2>
+<div class="flex items-center gap-5">
+<div class="w-28 h-28 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden relative shadow-inner">
+<img id="adm-logoPreview" src="" class="w-full h-full object-cover hidden">
+<div id="adm-logoPlaceholder" class="text-4xl text-gray-300">🎀</div>
+<input type="file" id="adm-logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+</div>
+<div class="flex flex-col gap-3">
+<p class="text-sm text-gray-500 font-medium">คลิกที่วงกลมเพื่ออัปโหลดโลโก้ใหม่</p>
+<button onclick="removeLogo()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-100 w-fit font-bold transition">
+<i class="fas fa-trash"></i> ลบรูปโลโก้
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-blue-400"></div>
+<h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
+<i class="fas fa-info-circle text-blue-500"></i> ข้อมูลทั่วไป
+</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อร้าน</label>
+<input type="text" id="adm-storeName" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">คำโปรย / สโลแกน</label>
+<input type="text" id="adm-tagline" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">เวลาทำการ</label>
+<input type="text" id="adm-hours" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">ระยะเวลาดำเนินการต่อคิว</label>
+<input type="text" id="adm-duration" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition">
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-green-400"></div>
+<h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
+<i class="fas fa-link text-green-500"></i> ลิงก์ติดต่อ
+</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">LINE ID</label>
+<input type="text" id="adm-lineId" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-green-300 outline-none transition">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">LINE Link URL</label>
+<input type="text" id="adm-lineLink" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-green-300 outline-none transition">
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-bold text-gray-700 mb-1.5">Facebook Link URL</label>
+<input type="text" id="adm-fbLink" placeholder="https://www.facebook.com/..." class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-blue-400 outline-none transition">
+</div>
+</div>
+</div>
+<div class="flex justify-end">
+<button onclick="saveStoreInfo(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition">
+<i class="fas fa-save mr-2"></i> บันทึกข้อมูลร้านค้า
+</button>
+</div>
+</div>
+<!-- TAB 2 -->
+<div id="content-games" class="admin-content hidden">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-100 pb-5">
+<h2 class="text-xl font-bold text-gray-800">จัดการเกมและราคา</h2>
+<button onclick="openEditGameModal()" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+<i class="fas fa-plus"></i> เพิ่มบริการใหม่
+</button>
+</div>
+<div class="mb-5">
+<label class="block text-sm font-bold text-gray-700 mb-2">กรองตามหมวดหมู่</label>
+<select id="adm-gameFilter" onchange="renderAdminGamesList()" class="w-full sm:w-64 border border-gray-200 rounded-xl p-2.5 bg-gray-50 outline-none focus:border-sugar-300 font-medium">
+<option value="all">ทั้งหมด</option>
+</select>
+</div>
+<div class="overflow-x-auto rounded-xl border border-gray-200">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
+<th class="p-4 w-20 text-center font-bold">ไอคอน</th>
+<th class="p-4 font-bold">ชื่อบริการ</th>
+<th class="p-4 font-bold">หมวดหมู่</th>
+<th class="p-4 w-24 text-center font-bold">สถานะ</th>
+<th class="p-4 w-24 text-center font-bold">แพ็กเกจ</th>
+<th class="p-4 w-32 text-center font-bold">จัดการ</th>
+</tr>
+</thead>
+<tbody id="adm-gamesListBody" class="text-sm bg-white">
+<tr><td colspan="6" class="text-center p-6 text-gray-500 font-medium">กำลังโหลดข้อมูล...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- TAB 3 -->
+<div id="content-payment" class="admin-content hidden space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
+<h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
+<i class="fas fa-university text-blue-600"></i> บัญชีธนาคาร (QR Code)
+</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อบัญชี</label>
+<input type="text" id="adm-bankName" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-blue-300 outline-none transition mb-4">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-2">รูปภาพ QR Code</label>
+<div class="flex items-start gap-4">
+<div class="w-40 h-40 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center bg-gray-50 overflow-hidden relative group cursor-pointer hover:bg-blue-50 transition">
+<img id="adm-qrPreview" src="" class="w-full h-full object-contain hidden">
+<div id="adm-qrPlaceholder" class="text-gray-400 text-sm font-medium flex flex-col items-center"><i class="fas fa-upload text-2xl mb-2 text-blue-300"></i>คลิกอัปโหลด</div>
+<input type="file" id="adm-qrInput" accept="image/*" onchange="handleImageUpload(event, 'adm-qrPreview')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-orange-500"></div>
+<h2 class="text-lg font-bold mb-5 text-gray-800 flex items-center gap-2">
+<i class="fas fa-wallet text-orange-500"></i> ทรูมันนี่ วอลเล็ท
+</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อบัญชี</label>
+<input type="text" id="adm-walletName" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-orange-300 outline-none transition">
+</div>
+</div>
+</div>
+<div class="flex justify-end">
+<button onclick="savePaymentInfo(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition">
+<i class="fas fa-save mr-2"></i> บันทึกข้อมูลการชำระเงิน
+</button>
+</div>
+</div>
+<!-- TAB 4 -->
+<div id="content-notices" class="admin-content hidden space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-yellow-400"></div>
+<h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+<i class="fas fa-thumbtack text-yellow-500"></i> ประกาศร้าน
+</h2>
+<div id="adm-noticesList" class="space-y-2 mb-5"></div>
+<div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+<input type="text" id="newNoticeInput" placeholder="พิมพ์ประกาศใหม่..." class="flex-grow border-none bg-transparent px-3 py-1 text-sm outline-none font-medium text-gray-700">
+<button onclick="addListItem('notices', 'newNoticeInput')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow">เพิ่ม</button>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
+<h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+<i class="fas fa-exclamation-triangle text-red-500"></i> ข้อควรระวัง
+</h2>
+<div id="adm-warningsList" class="space-y-2 mb-5"></div>
+<div class="flex gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+<input type="text" id="newWarningInput" placeholder="พิมพ์ข้อควรระวังใหม่..." class="flex-grow border-none bg-transparent px-3 py-1 text-sm outline-none font-medium text-gray-700">
+<button onclick="addListItem('warnings', 'newWarningInput')" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow">เพิ่ม</button>
+</div>
+</div>
+<div class="flex justify-end">
+<button onclick="saveNotices(this)" class="bg-sugar-500 hover:bg-sugar-600 text-white font-bold py-3.5 px-10 rounded-xl shadow-lg transition">
+<i class="fas fa-save mr-2"></i> บันทึกประกาศทั้งหมด
+</button>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- Edit/Add Game Modal -->
+<div id="admGameModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-white rounded-[24px] w-full max-w-3xl max-h-[90vh] flex flex-col modal-enter shadow-2xl overflow-hidden">
+<div class="bg-gray-800 p-5 text-white flex justify-between items-center">
+<h3 id="admGameModalTitle" class="font-bold text-xl">เพิ่ม/แก้ไข เกม</h3>
+<button onclick="closeModal('admGameModal')" class="text-gray-400 hover:text-white text-2xl transition"><i class="fas fa-times-circle"></i></button>
+</div>
+<div class="p-5 overflow-y-auto flex-grow flex flex-col gap-5 bg-gray-50">
+<input type="hidden" id="editGameId">
+<input type="hidden" id="editGameCustomIcon" value="">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">ชื่อบริการ</label>
+<input type="text" id="editGameName" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition font-medium text-gray-800">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">หมวดหมู่ <span class="text-red-500 text-xs">*จำเป็น</span></label>
+<select id="editGameCategory" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition font-medium text-gray-800"></select>
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">Emoji (ถ้าไม่ใช้รูป)</label>
+<input type="text" id="editGameIcon" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition text-xl text-center" maxlength="5">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-1.5">สถานะ</label>
+<select id="editGameStatus" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white focus:border-sugar-300 outline-none transition font-bold text-gray-800">
+<option value="open" class="text-green-600">✅ เปิดรับ (Open)</option>
+<option value="closed" class="text-red-600">❌ ปิดรับ (Closed)</option>
+</select>
+</div>
+<div class="md:col-span-2 mt-2">
+<label class="block text-sm font-bold text-gray-700 mb-2">รูปภาพใหญ่เรทราคา / รูปปกบริการ (แสดงด้านบนสุดในหน้าต่างลูกค้า)</label>
+<div class="flex items-center gap-4">
+<div class="w-20 h-20 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center bg-gray-50 overflow-hidden relative hover:bg-gray-100 transition cursor-pointer">
+<img id="adm-gameIconPreview" src="" class="w-full h-full object-cover hidden">
+<span id="adm-gameIconPlaceholder" class="text-2xl text-gray-400"><i class="fas fa-image"></i></span>
+<input type="file" id="adm-gameIconInput" accept="image/*" onchange="handleGameIconUpload(event)" class="absolute inset-0 opacity-0 cursor-pointer">
+</div>
+<button type="button" onclick="removeGameIcon()" class="text-xs bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition">ลบรูปใหญ่</button>
+</div>
+</div>
+</div>
+<div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-bold text-gray-800 text-lg flex items-center gap-2"><i class="fas fa-list-ul text-sugar-400"></i> รายการเรทราคา (แต่ละแพ็กเกจ)</h4>
+<button onclick="addPackageRow('', '', '')" class="text-sm bg-blue-50 border border-blue-200 text-blue-600 px-4 py-1.5 rounded-lg hover:bg-blue-100 font-bold transition shadow-sm"><i class="fas fa-plus"></i> เพิ่มแถว</button>
+</div>
+<div class="border border-gray-200 rounded-xl overflow-x-auto">
+<table class="w-full text-left text-sm min-w-[500px]">
+<thead class="bg-gray-50 border-b border-gray-200">
+<tr>
+<th class="p-3 w-10 text-center font-bold text-gray-600">#</th>
+<th class="p-3 w-16 text-center font-bold text-gray-600">รูปไอเทม</th>
+<th class="p-3 font-bold text-gray-600">ชื่อแพ็กเกจ (เช่น 100 เพชร)</th>
+<th class="p-3 w-32 font-bold text-gray-600">ราคา (บาท)</th>
+<th class="p-3 w-16 text-center font-bold text-gray-600">ลบ</th>
+</tr>
+</thead>
+<tbody id="admPackagesBody" class="bg-white"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="p-5 bg-white border-t border-gray-100 flex justify-between">
+<button onclick="deleteCurrentGame(this)" id="btnDeleteGame" class="bg-red-50 border border-red-200 text-red-600 px-5 py-2.5 rounded-xl font-bold hover:bg-red-100 transition shadow-sm">
+<i class="fas fa-trash mr-1"></i> ลบเกมนี้
+</button>
+<div class="flex gap-3">
+<button onclick="closeModal('admGameModal')" class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-5 py-2.5 rounded-xl font-bold transition">ยกเลิก</button>
+<button onclick="saveGameData(this)" class="bg-sugar-500 text-white px-8 py-2.5 rounded-xl font-bold shadow-md hover:bg-sugar-600 transition">บันทึก</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+const SUPABASE_URL = 'https://dmcyolyfnrxbgtmoigvp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtY3lvbHlmbnJ4Ymd0bW9pZ3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NjY1NDUsImV4cCI6MjEwNzA0MjU0NX0.OV1beaJ_4b9AZEWXSlFjOmdbh7yx9QYgbZ1E6ZOPPms';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const fallbackData = {
+storeInfo: {
+name: "SUGAR GAMING",
+tagline: "บริการเติมเกมออนไลน์",
+lineId: "@701mqrzf",
+lineLink: "https://lin.ee/u7SBLec",
+fbLink: "https://www.facebook.com/share/1Cha6DUTZU/",
+hours: "เปิดให้บริการทุกวัน",
+duration: "ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว",
+logoImage: ""
+},
+categories: [
+{ id: 'extra', name: '✨ เช่าแอพพรีเมียม', note: 'แจ้งรายละเอียดกับแอดมิน' },
+{ id: 'uid', name: '🎮 เติมด้วย UID', note: 'แจ้ง UID เกม พร้อมรายการ' },
+{ id: 'mailpass', name: '🔐 Mail & Password', note: 'แจ้ง Email / Password' },
+{ id: 'shop', name: '🍎 ฝากร้านดำเนินการ', note: 'ฝากร้านดำเนินการ' },
+{ id: 'novel', name: '📚 เติมเหรียญนิยาย', note: 'ระบบ Mail & Password' }
+],
+games: [
+{ id: 'g1', categoryId: 'extra', name: 'YouTube Premium', icon: '🎬', status: 'open', customIcon: '', packages: [{id: 'p1', name: '1 เดือน (หาร)', price: 35, image: ''}] }
+],
+payments: {
+bank: { name: 'เติมเกมกับเพจ Sugar Gaming – บริการเติมเกม', qrImage: '' },
+truewallet: { name: 'ฑิฑัมพร', phone: '' }
+},
+notices: [
+"ช่วงกิจกรรมหรือมีคิวจำนวนมาก อาจใช้เวลานานกว่าปกติ",
+"เรทราคาอาจมีการเปลี่ยนแปลงขึ้นลงตามกลไกตลาด"
+],
+warnings: [
+"ตรวจสอบบัญชีร้านก่อนโอนทุกครั้ง",
+"เฟซจริงมีเครื่องหมายยืนยันตัวตน",
+"ทางร้านไม่รับผิดชอบทุกกรณีหากโอนผิด",
+"ไม่รับกลาง ไม่รับแลกเงิน ไม่รับฝากซื้อ-ขายไอดี ไม่รับยืมเงิน"
+]
+};
+let appData = JSON.parse(JSON.stringify(fallbackData));
+let activeCategory = 'extra'; // ตั้งค่าให้เลือกหมวดหมู่ "เช่าแอพพรีเมียม" เป็นค่าเริ่มต้นหน้าแรก
+let currentEditGameId = null;
+function compressImage(file, maxWidth = 600, maxHeight = 600, quality = 0.8) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.readAsDataURL(file);
+reader.onload = (e) => {
+const img = new Image();
+img.src = e.target.result;
+img.onload = () => {
+let width = img.width; let height = img.height;
+if (width > height) { if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; } }
+else { if (height > maxHeight) { width = Math.round((height * maxHeight) / height); height = maxHeight; } }
+const canvas = document.createElement('canvas');
+canvas.width = width; canvas.height = height;
+const ctx = canvas.getContext('2d');
+ctx.drawImage(img, 0, 0, width, height);
+resolve(canvas.toDataURL('image/jpeg', quality));
+};
+img.onerror = (err) => reject(err);
+};
+reader.onerror = (err) => reject(err);
+});
+}
+// วิธีที่ 1: ดึงข้อมูลพร้อมกันทั้งหมด (Promise.all) โหลดเร็วขึ้นปรื๊ดปร๊าด
+async function fetchAppData() {
+try {
+const [storeRes, catRes, gameRes, payRes, noticeRes] = await Promise.all([
+supabaseClient.from('store_info').select('').limit(1),
+supabaseClient.from('categories').select('').order('sort_order', {ascending: true}),
+supabaseClient.from('games').select(', packages()').order('sort_order', {ascending: true}),
+supabaseClient.from('payments').select(''),
+supabaseClient.from('notices_warnings').select('').order('sort_order', {ascending: true})
+]);
+if (storeRes.data && storeRes.data.length > 0) {
+const s = storeRes.data[0];
+appData.storeInfo = {
+name: s.name || fallbackData.storeInfo.name,
+tagline: s.tagline || fallbackData.storeInfo.tagline,
+lineId: s.line_id || fallbackData.storeInfo.lineId,
+lineLink: s.line_link || fallbackData.storeInfo.lineLink,
+fbLink: s.fb_link || fallbackData.storeInfo.fbLink || 'https://www.facebook.com/share/1Cha6DUTZU/',
+hours: s.hours || fallbackData.storeInfo.hours,
+duration: s.duration || fallbackData.storeInfo.duration,
+logoImage: s.logo_image || ''
+};
+}
+if (catRes.data && catRes.data.length > 0) {
+let cats = catRes.data.map(c => ({ id: c.id, name: c.name, note: c.note }));
+// จัดการให้หมวดหมู่ "เช่าแอพพรีเมียม" (หรือบริการเพิ่มเติมเดิม) อยู่หน้าสุดเสมอ
+const premiumIndex = cats.findIndex(c => c.id === 'extra' || c.name.includes('บริการเพิ่มเติม') || c.name.includes('เช่าแอพพรีเมียม'));
+if (premiumIndex !== -1) {
+const premiumCat = cats.splice(premiumIndex, 1)[0];
+premiumCat.name = '✨ เช่าแอพพรีเมียม';
+cats.unshift(premiumCat);
+}
+appData.categories = cats;
+}
+if (gameRes.data && gameRes.data.length > 0) {
+appData.games = gameRes.data.map(g => ({
+id: g.id, categoryId: g.category_id, name: g.name, icon: g.icon, customIcon: g.custom_icon || '', status: g.status,
+packages: (g.packages || []).sort((a,b)=>a.sort_order - b.sort_order).map(p => ({
+id: p.id, name: p.name, price: p.price, image: p.image || ''
+}))
+}));
+}
+if (payRes.data && payRes.data.length > 0) {
+const bank = payRes.data.find(p => p.type === 'bank') || {};
+const tw = payRes.data.find(p => p.type === 'truewallet') || {};
+appData.payments = {
+bank: { name: bank.name || fallbackData.payments.bank.name, qrImage: bank.qr_image || '' },
+truewallet: { name: tw.name || fallbackData.payments.truewallet.name, phone: tw.phone || '' }
+};
+}
+if (noticeRes.data && noticeRes.data.length > 0) {
+const nList = noticeRes.data.filter(n => n.type === 'notice').map(n => n.content);
+const wList = noticeRes.data.filter(n => n.type === 'warning').map(n => n.content);
+if (nList.length > 0) appData.notices = nList;
+if (wList.length > 0) appData.warnings = wList;
+}
+renderCustomerView();
+} catch (err) {
+console.warn('Using fallback data:', err);
+renderCustomerView();
+}
+}
+function renderCustomerView() {
+const info = appData.storeInfo;
+if (info.logoImage) {
+document.getElementById('cv-logoImage').src = info.logoImage;
+document.getElementById('cv-logoImage').classList.remove('hidden');
+document.getElementById('cv-logoText').classList.add('hidden');
+} else {
+document.getElementById('cv-logoImage').classList.add('hidden');
+document.getElementById('cv-logoText').classList.remove('hidden');
+}
+document.getElementById('cv-storeName').innerHTML = ⁠${info.name || 'SUGAR GAMING'} <span class="relative flex h-2.5 w-2.5 ml-1"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75" style="animation-duration: 1.5s;"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span></span>⁠;
+document.getElementById('cv-tagline').innerText = info.tagline || '';
+document.getElementById('cv-hours').innerText = ⁠${info.hours || ''} | ${info.duration || ''}⁠;
+document.getElementById('cv-lineBtn').href = info.lineLink || 'https://lin.ee/u7SBLec';
+const fbBtn = document.getElementById('cv-fbBtn');
+if(info.fbLink) {
+fbBtn.href = info.fbLink; fbBtn.classList.remove('hidden');
+} else {
+fbBtn.classList.add('hidden');
+}
+const noticeEl = document.getElementById('cv-notices');
+if (appData.notices.length === 0) noticeEl.innerHTML = ⁠<p class="text-center">ไม่มีประกาศในขณะนี้</p>⁠;
+else noticeEl.innerHTML = appData.notices.map(n => ⁠<p class="flex items-start gap-2 mb-1 last:mb-0"><span class="text-sugar-500 mt-0.5"><i class="fas fa-bell"></i></span><span>${n}</span></p>⁠).join('');
+const catContainer = document.getElementById('cv-categories');
+if (appData.categories.length === 0) catContainer.innerHTML = ⁠<p class="text-sugar-500">ไม่มีหมวดหมู่บริการ</p>⁠;
+else {
+if(!appData.categories.some(c => c.id === activeCategory) && appData.categories.length > 0) activeCategory = appData.categories[0].id;
+catContainer.innerHTML = appData.categories.map(cat => ⁠<button onclick="setActiveCategory('${cat.id}')" class="flex-shrink-0 px-5 py-2.5 rounded-2xl font-bold transition text-sm ${cat.id === activeCategory ? 'bg-sugar-400 text-white shadow-[0_4px_12px_rgba(255,133,162,0.4)] scale-105' : 'bg-white/80 border-2 border-sugar-100 text-sugar-700 hover:bg-sugar-50'}">${cat.name}</button>⁠).join('');
+}
+renderGamesGrid();
+document.getElementById('cv-bankName').innerText = appData.payments.bank.name || '-';
+const qrImg = document.getElementById('cv-qrImage'); const qrPlaceholder = document.getElementById('cv-qrPlaceholder');
+if (appData.payments.bank.qrImage) { qrImg.src = appData.payments.bank.qrImage; qrImg.classList.remove('hidden'); qrPlaceholder.classList.add('hidden'); }
+else { qrImg.classList.add('hidden'); qrPlaceholder.classList.remove('hidden'); }
+document.getElementById('cv-walletName').innerText = appData.payments.truewallet.name || '-';
+const warningEl = document.getElementById('cv-warnings');
+if (appData.warnings.length === 0) warningEl.innerHTML = ⁠<li>ไม่มีข้อควรระวัง</li>⁠;
+else warningEl.innerHTML = appData.warnings.map(w => ⁠<li class="flex items-start gap-2"><span class="text-red-500 mt-0.5 font-bold">!</span> <span>${w}</span></li>⁠).join('');
+}
+function setActiveCategory(catId) { activeCategory = catId; renderCustomerView(); }
+function renderGamesGrid() {
+const grid = document.getElementById('cv-gamesGrid');
+const games = appData.games.filter(g => g.categoryId === activeCategory);
+if(games.length === 0) { grid.innerHTML = ⁠<div class="col-span-full text-center text-sugar-500 font-medium py-10 bg-white/50 rounded-3xl border-2 border-sugar-100 border-dashed">ไม่มีบริการในหมวดหมู่นี้ 🌸</div>⁠; return; }
+grid.innerHTML = games.map(game => {
+const isClosed = game.status === 'closed';
+const lightHtml = isClosed ? ⁠<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span>⁠ : ⁠<span class="relative flex h-2.5 w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>⁠;
+const iconHtml = game.customIcon ? ⁠<img src="${game.customIcon}" alt="${game.name}" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl object-cover shadow-sm mb-3 border-2 border-sugar-50">⁠ : ⁠<div class="text-4xl sm:text-5xl mb-3 drop-shadow-sm">${game.icon || '🎮'}</div>⁠;
+return ⁠<div onclick="${isClosed ? '' : ⁠openGameModal('{game.id}')`}" class="cute-card p-4 sm:p-5 text-center relative group ${isClosed ? 'opacity-70 cursor-not-allowed grayscale-[20%]' : 'cursor-pointer'}">
+${isClosed ? `<div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-bl-xl rounded-tr-[22px] flex items-center gap-1.5 shadow-sm">{lightHtml} ปิดรับ</div>⁠ : ''} ${iconHtml} <div class="text-xs sm:text-sm font-extrabold text-sugar-800 leading-tight flex items-center justify-center gap-1.5"> ${!isClosed ? lightHtml : ''} <span>${game.name}</span> </div> </div>⁠
+}).join('');
+}
+function openGameModal(gameId) {
+const game = appData.games.find(g => g.id === gameId);
+const category = appData.categories.find(c => c.id === game.categoryId);
+if(!game) return;
+if (game.customIcon) {
+document.getElementById('modalIcon').classList.add('hidden');
+document.getElementById('modalIconImg').src = game.customIcon;
+document.getElementById('modalIconImg').classList.remove('hidden');
+} else {
+document.getElementById('modalIconImg').classList.add('hidden');
+document.getElementById('modalIcon').innerText = game.icon || '🎮';
+document.getElementById('modalIcon').classList.remove('hidden');
+}
+document.getElementById('modalGameName').innerText = game.name;
+document.getElementById('modalReqType').innerText = category ? category.note : '';
+const largeImgContainer = document.getElementById('modalLargeImageContainer');
+const largeImg = document.getElementById('modalLargeImage');
+if (game.customIcon) {
+largeImg.src = game.customIcon;
+largeImgContainer.classList.remove('hidden');
+} else {
+largeImgContainer.classList.add('hidden');
+}
+const warningEl = document.getElementById('modalStatusWarning'); const orderBtn = document.getElementById('modalOrderBtn'); const listEl = document.getElementById('packagesList');
+if(game.status === 'closed') { warningEl.classList.remove('hidden'); orderBtn.classList.add('opacity-50', 'pointer-events-none'); }
+else { warningEl.classList.add('hidden'); orderBtn.classList.remove('opacity-50', 'pointer-events-none'); orderBtn.href = appData.storeInfo.lineLink; }
+if(!game.packages || game.packages.length === 0) {
+listEl.innerHTML = ⁠<p class="text-center text-sugar-500 py-6 font-medium">ยังไม่มีแพ็กเกจราคา 🌸</p>⁠;
+} else {
+listEl.innerHTML = game.packages.map(pkg => ⁠<div class="bg-white p-3.5 rounded-2xl border-2 border-sugar-100 flex justify-between items-center shadow-sm hover:border-sugar-300 transition"> <div class="flex items-center gap-3"> ${pkg.image ?⁠<img src="${pkg.image}" class="w-11 h-11 rounded-xl object-cover border border-sugar-50 shadow-sm">⁠:⁠<div class="w-11 h-11 rounded-xl bg-sugar-50 flex items-center justify-center text-sugar-300 border border-sugar-100 text-lg"><i class="fas fa-gift"></i></div>⁠} <span class="font-extrabold text-sugar-800 text-sm sm:text-base">${pkg.name}</span> </div> <span class="font-extrabold text-sugar-600 bg-sugar-50 px-3.5 py-1.5 rounded-xl text-sm sm:text-base border border-sugar-100 shadow-sm">${pkg.price} ฿</span> </div> ⁠).join('');
+}
+document.getElementById('gameModal').classList.remove('hidden');
+}
+function toggleAdminLogin() { document.getElementById('adminEmail').value = ''; document.getElementById('adminPassword').value = ''; document.getElementById('loginErrorMsg').classList.add('hidden'); document.getElementById('adminLoginModal').classList.remove('hidden'); }
+async function handleSupabaseLogin() {
+const email = document.getElementById('adminEmail').value.trim(); const password = document.getElementById('adminPassword').value.trim(); const errEl = document.getElementById('loginErrorMsg'); const btn = document.getElementById('btnLoginSubmit');
+if (!email || !password) { errEl.innerText = 'กรุณากรอกให้ครบถ้วน'; errEl.classList.remove('hidden'); return; }
+btn.disabled = true; btn.innerText = 'กำลังตรวจสอบ...';
+try {
+const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
+if (authError || !authData.user) throw new Error('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+const { data: isAdmin, error: rpcError } = await supabaseClient.rpc('is_admin');
+if (rpcError || !isAdmin) { await supabaseClient.auth.signOut(); throw new Error('ไม่มีสิทธิ์เข้าถึงระบบหลังบ้าน'); }
+closeModal('adminLoginModal'); document.getElementById('customerView').classList.add('hidden'); document.getElementById('adminView').classList.remove('hidden'); document.getElementById('adminView').classList.add('flex'); initAdminDashboard();
+} catch (err) { errEl.innerText = err.message; errEl.classList.remove('hidden'); } finally { btn.disabled = false; btn.innerText = 'เข้าสู่ระบบ'; }
+}
+async function logoutAdmin() { await supabaseClient.auth.signOut(); document.getElementById('adminView').classList.add('hidden'); document.getElementById('adminView').classList.remove('flex'); document.getElementById('customerView').classList.remove('hidden'); fetchAppData(); window.scrollTo(0,0); }
+function switchAdminTab(tabId) {
+document.querySelectorAll('.admin-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); }); document.getElementById(⁠content-${tabId}⁠).classList.remove('hidden'); document.getElementById(⁠content-${tabId}⁠).classList.add('block');
+document.querySelectorAll('.admin-tab').forEach(el => { el.classList.remove('bg-sugar-50', 'text-sugar-600'); }); document.getElementById(⁠tab-${tabId}⁠)?.classList.add('bg-sugar-50', 'text-sugar-600');
+}
+function initAdminDashboard() {
+switchAdminTab('info');
+const info = appData.storeInfo;
+if (info.logoImage) { document.getElementById('adm-logoPreview').src = info.logoImage; document.getElementById('adm-logoPreview').classList.remove('hidden'); document.getElementById('adm-logoPlaceholder').classList.add('hidden'); }
+document.getElementById('adm-storeName').value = info.name || '';
+document.getElementById('adm-tagline').value = info.tagline || '';
+document.getElementById('adm-lineId').value = info.lineId || '';
+document.getElementById('adm-lineLink').value = info.lineLink || '';
+document.getElementById('adm-fbLink').value = info.fbLink || 'https://www.facebook.com/share/1Cha6DUTZU/';
+document.getElementById('adm-hours').value = info.hours || '';
+document.getElementById('adm-duration').value = info.duration || '';
+document.getElementById('adm-bankName').value = appData.payments.bank.name || '';
+if(appData.payments.bank.qrImage) { document.getElementById('adm-qrPreview').src = appData.payments.bank.qrImage; document.getElementById('adm-qrPreview').classList.remove('hidden'); document.getElementById('adm-qrPlaceholder').classList.add('hidden'); }
+document.getElementById('adm-walletName').value = appData.payments.truewallet.name || '';
+renderAdminGamesList(); renderAdminLists('notices'); renderAdminLists('warnings');
+}
+function showToast(msg) {
+const toast = document.getElementById('toast'); toast.querySelector('#toastMsg').innerText = msg; toast.classList.remove('translate-x-full'); setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
+}
+async function handleLogoUpload(event) {
+if(!event.target.files[0]) return;
+try { const b64 = await compressImage(event.target.files[0], 300, 300); appData.storeInfo.logoImage = b64; document.getElementById('adm-logoPreview').src = b64; document.getElementById('adm-logoPreview').classList.remove('hidden'); document.getElementById('adm-logoPlaceholder').classList.add('hidden'); } catch(e) { alert(e.message); }
+}
+function removeLogo() { appData.storeInfo.logoImage = ""; document.getElementById('adm-logoPreview').classList.add('hidden'); document.getElementById('adm-logoPlaceholder').classList.remove('hidden'); document.getElementById('adm-logoInput').value = ''; }
+async function saveStoreInfo(btn) {
+btn.disabled = true;
+try {
+const fbUrl = document.getElementById('adm-fbLink').value;
+const infoData = {
+name: document.getElementById('adm-storeName').value,
+tagline: document.getElementById('adm-tagline').value,
+line_id: document.getElementById('adm-lineId').value,
+line_link: document.getElementById('adm-lineLink').value,
+hours: document.getElementById('adm-hours').value,
+duration: document.getElementById('adm-duration').value,
+logo_image: appData.storeInfo.logoImage
+};
+try { infoData.fb_link = fbUrl; } catch(e) {}
+appData.storeInfo.fbLink = fbUrl;
+const { data: existing } = await supabaseClient.from('store_info').select('id').limit(1);
+if (existing && existing.length > 0) await supabaseClient.from('store_info').update(infoData).eq('id', existing[0].id); else await supabaseClient.from('store_info').insert([infoData]);
+await fetchAppData(); showToast('บันทึกสำเร็จ');
+} catch (err) { alert('บันทึกข้อมูลเรียบร้อย'); } finally { btn.disabled = false; }
+}
+async function handleImageUpload(event, previewId) {
+if(!event.target.files[0]) return;
+try { const b64 = await compressImage(event.target.files[0], 400, 400); appData.payments.bank.qrImage = b64; document.getElementById(previewId).src = b64; document.getElementById(previewId).classList.remove('hidden'); document.getElementById('adm-qrPlaceholder').classList.add('hidden'); } catch(e) { alert(e.message); }
+}
+async function savePaymentInfo(btn) {
+btn.disabled = true;
+try {
+const bankName = document.getElementById('adm-bankName').value; const qrImg = appData.payments.bank.qrImage; const twName = document.getElementById('adm-walletName').value;
+const { data: bRows } = await supabaseClient.from('payments').select('id').eq('type', 'bank');
+if (bRows && bRows.length > 0) await supabaseClient.from('payments').update({ name: bankName, qr_image: qrImg }).eq('id', bRows[0].id); else await supabaseClient.from('payments').insert([{ type: 'bank', name: bankName, qr_image: qrImg }]);
+const { data: twRows } = await supabaseClient.from('payments').select('id').eq('type', 'truewallet');
+if (twRows && twRows.length > 0) await supabaseClient.from('payments').update({ name: twName }).eq('id', twRows[0].id); else await supabaseClient.from('payments').insert([{ type: 'truewallet', name: twName }]);
+await fetchAppData(); showToast('บันทึกสำเร็จ');
+} catch (err) { alert(err.message); } finally { btn.disabled = false; }
+}
+function renderAdminLists(type) { const c = document.getElementById(⁠adm-${type}List⁠); if (!c) return; c.innerHTML = appData[type].map((item, index) => ⁠<div class="flex justify-between items-center bg-white border border-gray-200 p-2.5 rounded-xl text-sm font-medium text-gray-700 shadow-sm"><span class="truncate w-5/6">${item}</span><button onclick="removeListItem('${type}', ${index})" class="text-red-400 hover:text-red-600 px-2 transition"><i class="fas fa-trash"></i></button></div>⁠).join(''); }
+function addListItem(type, inputId) { const v = document.getElementById(inputId).value.trim(); if(v) { appData[type].push(v); document.getElementById(inputId).value = ''; renderAdminLists(type); } }
+function removeListItem(type, index) { appData[type].splice(index, 1); renderAdminLists(type); }
+async function saveNotices(btn) {
+btn.disabled = true;
+try {
+await supabaseClient.from('notices_warnings').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+const rows = [];
+appData.notices.forEach((c, idx) => rows.push({ type: 'notice', content: c, sort_order: idx }));
+appData.warnings.forEach((c, idx) => rows.push({ type: 'warning', content: c, sort_order: idx }));
+if (rows.length > 0) await supabaseClient.from('notices_warnings').insert(rows);
+await fetchAppData(); showToast('บันทึกสำเร็จ');
+} catch (err) { alert(err.message); } finally { btn.disabled = false; }
+}
+function renderAdminGamesList() {
+const filterEl = document.getElementById('adm-gameFilter');
+const currentFilter = filterEl.value;
+filterEl.innerHTML = ⁠<option value="all">ทั้งหมด</option>⁠ + appData.categories.map(c => ⁠<option value="${c.id}">${c.name}</option>⁠).join('');
+filterEl.value = currentFilter || 'all';
+const tbody = document.getElementById('adm-gamesListBody'); const filterVal = filterEl.value;
+let games = appData.games; if(filterVal !== 'all') games = games.filter(g => g.categoryId === filterVal);
+if(games.length === 0) { tbody.innerHTML = ⁠<tr><td colspan="6" class="text-center p-6 text-sugar-500 font-medium">ไม่มีบริการในหมวดหมู่นี้</td></tr>⁠; return; }
+tbody.innerHTML = games.map(g => {
+const cName = appData.categories.find(c => c.id === g.categoryId)?.name || 'Unknown';
+const sHtml = g.status === 'open' ? ⁠<span class="bg-green-50 text-green-600 border border-green-200 px-2.5 py-1 rounded-lg text-xs font-bold">เปิดรับ</span>⁠ : ⁠<span class="bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-bold">ปิดรับ</span>⁠;
+const iHtml = g.customIcon ? ⁠<img src="${g.customIcon}" class="w-12 h-12 object-cover rounded-xl mx-auto shadow-sm border border-gray-100">⁠ : ⁠<span class="text-3xl">${g.icon || '🎮'}</span>⁠;
+return ⁠<tr class="border-b border-gray-100 hover:bg-sugar-50/30 transition"><td class="p-3 text-center">${iHtml}</td><td class="p-3 font-bold text-gray-800">${g.name}</td><td class="p-3 text-gray-500 font-medium text-sm">${cName}</td><td class="p-3 text-center">${sHtml}</td><td class="p-3 text-center text-gray-500 font-bold">${g.packages ? g.packages.length : 0}</td><td class="p-3 text-center"><button onclick="openEditGameModal('${g.id}')" class="bg-sugar-100 text-sugar-600 hover:bg-sugar-200 px-4 py-2 rounded-xl transition text-sm font-bold shadow-sm">จัดการ</button></td></tr>⁠;
+}).join('');
+}
+function openEditGameModal(gameId = null) {
+currentEditGameId = gameId; const tbody = document.getElementById('admPackagesBody');
+const catSelect = document.getElementById('editGameCategory');
+catSelect.innerHTML = appData.categories.map(c => ⁠<option value="${c.id}">${c.name}</option>⁠).join('');
+if (gameId) {
+const g = appData.games.find(g => g.id === gameId); if(!g) return;
+document.getElementById('admGameModalTitle').innerText = 'แก้ไขเกมและราคา';
+document.getElementById('editGameId').value = g.id; document.getElementById('editGameName').value = g.name; document.getElementById('editGameCategory').value = g.categoryId; document.getElementById('editGameIcon').value = g.icon || '🎮'; document.getElementById('editGameStatus').value = g.status; document.getElementById('editGameCustomIcon').value = g.customIcon || '';
+if (g.customIcon) { document.getElementById('adm-gameIconPreview').src = g.customIcon; document.getElementById('adm-gameIconPreview').classList.remove('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.add('hidden'); } else { document.getElementById('adm-gameIconPreview').classList.add('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden'); }
+document.getElementById('btnDeleteGame').classList.remove('hidden');
+tbody.innerHTML = '';
+if(g.packages && g.packages.length > 0) g.packages.forEach((pkg) => addPackageRow(pkg.name, pkg.price, pkg.image)); else addPackageRow('', '', '');
+} else {
+document.getElementById('admGameModalTitle').innerText = 'เพิ่มบริการใหม่';
+document.getElementById('editGameId').value = 'new_' + Date.now(); document.getElementById('editGameName').value = '';
+if(appData.categories.length > 0) document.getElementById('editGameCategory').value = appData.categories[0].id;
+document.getElementById('editGameIcon').value = '🎮'; document.getElementById('editGameStatus').value = 'open'; document.getElementById('editGameCustomIcon').value = '';
+document.getElementById('adm-gameIconPreview').classList.add('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden'); document.getElementById('btnDeleteGame').classList.add('hidden');
+tbody.innerHTML = ''; addPackageRow('', '', '');
+}
+document.getElementById('admGameModal').classList.remove('hidden');
+}
+async function handleGameIconUpload(event) {
+if(!event.target.files[0]) return;
+try { const b64 = await compressImage(event.target.files[0], 600, 600); document.getElementById('editGameCustomIcon').value = b64; document.getElementById('adm-gameIconPreview').src = b64; document.getElementById('adm-gameIconPreview').classList.remove('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.add('hidden'); } catch(e) { alert(e.message); }
+}
+function removeGameIcon() { document.getElementById('editGameCustomIcon').value = ''; document.getElementById('adm-gameIconPreview').classList.add('hidden'); document.getElementById('adm-gameIconPlaceholder').classList.remove('hidden'); document.getElementById('adm-gameIconInput').value=''; }
+async function handlePackageImageUpload(event, inputEl) {
+if(!event.target.files[0]) return;
+try {
+const b64 = await compressImage(event.target.files[0], 200, 200);
+const container = inputEl.closest('.relative');
+container.querySelector('.pkg-img-preview').src = b64;
+container.querySelector('.pkg-img-preview').classList.remove('hidden');
+container.querySelector('.pkg-img-placeholder').classList.add('hidden');
+container.querySelector('.pkg-img-val').value = b64;
+} catch(e) { alert('ประมวลผลรูปภาพผิดพลาด: ' + e.message); }
+}
+function addPackageRow(name, price, image = '') {
+const tbody = document.getElementById('admPackagesBody'); if(!tbody) return;
+const rowCount = tbody.children.length + 1;
+const tr = document.createElement('tr'); tr.className = "border-b border-gray-100 package-row hover:bg-sugar-50/50 transition";
+tr.innerHTML = ⁠<td class="p-3 text-center text-gray-500 font-bold row-num">${rowCount}</td> <td class="p-3 text-center"> <div class="relative w-12 h-12 mx-auto border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden hover:bg-gray-100 hover:border-sugar-300 transition cursor-pointer shadow-sm"> <img src="${image}" class="w-full h-full object-cover pkg-img-preview ${image ? '' : 'hidden'}"> <span class="text-gray-400 text-sm pkg-img-placeholder ${image ? 'hidden' : ''}"><i class="fas fa-image"></i></span> <input type="file" accept="image/*" onchange="handlePackageImageUpload(event, this)" class="absolute inset-0 opacity-0 cursor-pointer" title="อัปโหลดรูปแพ็กเกจ"> <input type="hidden" class="pkg-img-val" value="${image}"> </div> </td> <td class="p-3"><input type="text" value="${name}" placeholder="เช่น 100 เพชร" class="w-full border border-gray-200 rounded-xl p-2.5 pkg-name bg-white outline-none focus:border-sugar-300 font-medium text-gray-700"></td> <td class="p-3"><input type="number" value="${price}" placeholder="ราคา" class="w-full border border-gray-200 rounded-xl p-2.5 pkg-price bg-white outline-none focus:border-sugar-300 font-bold text-gray-700"></td> <td class="p-3 text-center"><button type="button" onclick="this.closest('tr').remove(); updateRowNumbers();" class="text-red-400 hover:text-red-600 bg-red-50 p-2.5 rounded-xl transition"><i class="fas fa-trash"></i></button></td>⁠;
+tbody.appendChild(tr);
+}
+function updateRowNumbers() { document.querySelectorAll('.package-row .row-num').forEach((td, idx) => td.innerText = idx + 1); }
+async function saveGameData(btn) {
+const idInput = document.getElementById('editGameId').value;
+const name = document.getElementById('editGameName').value.trim();
+const categoryId = document.getElementById('editGameCategory').value;
+if(!name) { alert("กรุณากรอกชื่อบริการ"); return; }
+if(!categoryId) { alert("กรุณาเลือกหมวดหมู่บริการ"); return; }
+btn.disabled = true;
+try {
+let gameId = idInput; if (idInput.startsWith('new_')) gameId = 'g_' + Date.now();
+const gamePayload = {
+id: gameId,
+category_id: categoryId,
+name: name,
+icon: document.getElementById('editGameIcon').value || '🎮',
+custom_icon: document.getElementById('editGameCustomIcon').value,
+status: document.getElementById('editGameStatus').value
+};
+const { error: gameErr } = await supabaseClient.from('games').upsert([gamePayload]);
+if (gameErr) throw gameErr;
+await supabaseClient.from('packages').delete().eq('game_id', gameId);
+const packageRows = [];
+document.querySelectorAll('.package-row').forEach((row, idx) => {
+const pName = row.querySelector('.pkg-name').value.trim();
+const pPrice = row.querySelector('.pkg-price').value;
+const pImage = row.querySelector('.pkg-img-val').value;
+if(pName) packageRows.push({ id: 'p_' + gameId + '' + idx + '' + Date.now(), game_id: gameId, name: pName, price: pPrice ? parseFloat(pPrice) : 0, image: pImage, sort_order: idx });
+});
+if (packageRows.length > 0) {
+const { error: pkgErr } = await supabaseClient.from('packages').insert(packageRows);
+if (pkgErr) throw pkgErr;
+}
+await fetchAppData(); closeModal('admGameModal'); renderAdminGamesList(); showToast('บันทึกสำเร็จ');
+} catch (err) { alert('เกิดข้อผิดพลาด: ' + err.message); } finally { btn.disabled = false; }
+}
+async function deleteCurrentGame(btn) {
+if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเกมนี้?')) {
+btn.disabled = true;
+try {
+const { error } = await supabaseClient.from('games').delete().eq('id', document.getElementById('editGameId').value);
+if (error) throw error;
+await fetchAppData(); closeModal('admGameModal'); renderAdminGamesList(); showToast('ลบสำเร็จ');
+} catch (err) { alert(err.message); } finally { btn.disabled = false; }
+}
+}
+function closeModal(id) { const el = document.getElementById(id); if(el) el.classList.add('hidden'); }
+function scrollToSection(id) { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); }
+window.onclick = function(event) { ['gameModal', 'adminLoginModal', 'admGameModal'].forEach(id => { if (event.target === document.getElementById(id)) closeModal(id); }); };
+window.onload = () => {
+fetchAppData();
+};
+</script>
 </body>
 </html>
