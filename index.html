@@ -215,7 +215,6 @@
                 <p id="cv-hours" class="text-sugar-700 font-bold text-sm sm:text-base">เปิดให้บริการทุกวัน | ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว</p>
             </div>
             
-            <!-- Only LINE and Facebook buttons now -->
             <div class="flex flex-wrap justify-center items-center gap-3 mb-6 z-10 relative px-4 w-full max-w-xl mx-auto">
                 <a id="cv-lineBtn" href="https://lin.ee/u7SBLec" target="_blank" class="flex-1 min-w-[150px] justify-center flex items-center gap-2 bg-[#00B900] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#009900] transition transform hover:-translate-y-1">
                     <i class="fab fa-line text-2xl"></i> ทักแชท LINE
@@ -694,11 +693,11 @@
                 logoImage: ""
             },
             categories: [
+                { id: 'extra', name: '✨ เช่าแอพพรีเมียม', note: 'แจ้งรายละเอียดกับแอดมิน' },
                 { id: 'uid', name: '🎮 เติมด้วย UID', note: 'แจ้ง UID เกม พร้อมรายการ' },
                 { id: 'mailpass', name: '🔐 Mail & Password', note: 'แจ้ง Email / Password' },
                 { id: 'shop', name: '🍎 ฝากร้านดำเนินการ', note: 'ฝากร้านดำเนินการ' },
-                { id: 'novel', name: '📚 เติมเหรียญนิยาย', note: 'ระบบ Mail & Password' },
-                { id: 'extra', name: '✨ บริการเพิ่มเติม', note: 'แจ้งรายละเอียดกับแอดมิน' }
+                { id: 'novel', name: '📚 เติมเหรียญนิยาย', note: 'ระบบ Mail & Password' }
             ],
             games: [
                 { id: 'g1', categoryId: 'uid', name: 'Free Fire', icon: '🔥', status: 'open', customIcon: '', packages: [{id: 'p1', name: '100 เพชร', price: 29, image: ''}] }
@@ -720,7 +719,7 @@
         };
 
         let appData = JSON.parse(JSON.stringify(fallbackData));
-        let activeCategory = 'uid';
+        let activeCategory = 'extra'; // ตั้งค่าให้หมวดหมู่แรกที่เลือกคือ เช่าแอพพรีเมียม เสมอ
         let currentEditGameId = null;
 
         function compressImage(file, maxWidth = 600, maxHeight = 600, quality = 0.8) {
@@ -765,7 +764,16 @@
 
                 const { data: catData } = await supabaseClient.from('categories').select('*').order('sort_order', {ascending: true});
                 if (catData && catData.length > 0) {
-                    appData.categories = catData.map(c => ({ id: c.id, name: c.name, note: c.note }));
+                    let cats = catData.map(c => ({ id: c.id, name: c.name, note: c.note }));
+                    
+                    // ดึงหมวดหมู่เช่าแอพพรีเมียม (หรือชื่อเดิมบริการเพิ่มเติม) มาหน้าสุด
+                    const premiumIndex = cats.findIndex(c => c.id === 'extra' || c.name.includes('บริการเพิ่มเติม') || c.name.includes('เช่าแอพพรีเมียม'));
+                    if (premiumIndex !== -1) {
+                        const premiumCat = cats.splice(premiumIndex, 1)[0];
+                        premiumCat.name = '✨ เช่าแอพพรีเมียม'; // บังคับให้เป็นชื่อนี้เสมอ
+                        cats.unshift(premiumCat);
+                    }
+                    appData.categories = cats;
                 }
 
                 const { data: gameData } = await supabaseClient.from('games').select('*, packages(*)').order('sort_order', {ascending: true});
@@ -1167,4 +1175,3 @@
     </script>
 </body>
 </html>
-```eof
