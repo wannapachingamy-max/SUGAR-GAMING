@@ -222,9 +222,6 @@
                 <a id="cv-fbBtn" href="https://www.facebook.com/share/1Cha6DUTZU/" target="_blank" class="w-full sm:w-auto justify-center flex items-center gap-2 bg-[#1877F2] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#166FE5] transition transform hover:-translate-y-1">
                     <i class="fab fa-facebook text-2xl"></i> Facebook
                 </a>
-                <a id="cv-driveBtn" href="https://drive.google.com/drive/folders/1-BeAnlGfbBWkcWJ9mZ4EfTKxLBJFC3gt?usp=drive_link" target="_blank" class="w-full sm:w-auto justify-center flex items-center gap-2 bg-white text-sugar-800 border-2 border-sugar-200 px-6 py-3 rounded-full font-bold shadow-sm hover:bg-sugar-50 hover:border-sugar-300 transition transform hover:-translate-y-1">
-                    <i class="fab fa-google-drive text-yellow-500 text-lg"></i> ดูเรทราคาทั้งหมด
-                </a>
             </div>
 
             <!-- Notices -->
@@ -309,7 +306,7 @@
         </footer>
     </div>
 
-    <!-- Game Packages Modal (With Large Category/Game Image Preview) -->
+    <!-- Game Packages Modal (With Large Preview Image) -->
     <div id="gameModal" class="fixed inset-0 z-50 hidden bg-sugar-900/40 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] w-full max-w-lg max-h-[90vh] flex flex-col modal-enter overflow-hidden relative border-[6px] border-white shadow-2xl">
             <div id="modalHeader" class="bg-sugar-300 p-5 text-sugar-800 flex items-center gap-4 border-b-2 border-white">
@@ -331,7 +328,7 @@
                     ❌ ปิดรับบริการชั่วคราว
                 </div>
 
-                <!-- Large Preview Image Container (NEW!) -->
+                <!-- Large Preview Image at Top -->
                 <div id="modalLargeImageContainer" class="hidden w-full bg-white rounded-2xl p-2 border-2 border-sugar-100 shadow-sm overflow-hidden text-center">
                     <img id="modalLargeImage" src="" alt="Rate Preview" class="w-full h-auto max-h-72 object-contain rounded-xl mx-auto">
                 </div>
@@ -462,13 +459,9 @@
                                 <label class="block text-sm font-bold text-gray-700 mb-1.5">LINE Link URL</label>
                                 <input type="text" id="adm-lineLink" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-green-300 outline-none transition">
                             </div>
-                            <div>
+                            <div class="md:col-span-2">
                                 <label class="block text-sm font-bold text-gray-700 mb-1.5">Facebook Link URL</label>
                                 <input type="text" id="adm-fbLink" placeholder="https://www.facebook.com/..." class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-blue-400 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1.5">Google Drive Link (ดูเรททั้งหมด)</label>
-                                <input type="text" id="adm-driveLink" class="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 focus:bg-white focus:border-yellow-400 outline-none transition">
                             </div>
                         </div>
                     </div>
@@ -484,7 +477,7 @@
                 <div id="content-games" class="admin-content hidden">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-100 pb-5">
-                            <h2 class="text-xl font-bold text-gray-800">จัดการเกมและราคา</h2>
+                            <h2 class="text-xl font-bold text-gray-800">จัดการเกมและบริการ</h2>
                             <button onclick="openEditGameModal()" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition flex items-center gap-2">
                                 <i class="fas fa-plus"></i> เพิ่มบริการใหม่
                             </button>
@@ -691,7 +684,6 @@
                 lineId: "@701mqrzf",
                 lineLink: "https://lin.ee/u7SBLec",
                 fbLink: "https://www.facebook.com/share/1Cha6DUTZU/",
-                driveLink: "https://drive.google.com/drive/folders/1-BeAnlGfbBWkcWJ9mZ4EfTKxLBJFC3gt?usp=drive_link",
                 hours: "เปิดให้บริการทุกวัน",
                 duration: "ระยะเวลาดำเนินการประมาณ 5–20 นาทีต่อคิว",
                 logoImage: ""
@@ -736,7 +728,7 @@
                     img.onload = () => {
                         let width = img.width; let height = img.height;
                         if (width > height) { if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; } }
-                        else { if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; } }
+                        else { if (height > maxHeight) { width = Math.round((height * maxHeight) / height); height = maxHeight; } }
                         const canvas = document.createElement('canvas');
                         canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
@@ -751,12 +743,6 @@
 
         async function fetchAppData() {
             try {
-                // Ensure categories exist in DB first if table is empty
-                const { data: catCheck } = await supabaseClient.from('categories').select('id').limit(1);
-                if (!catCheck || catCheck.length === 0) {
-                    await supabaseClient.from('categories').insert(fallbackData.categories.map((c, idx) => ({ id: c.id, name: c.name, note: c.note, sort_order: idx })));
-                }
-
                 const { data: storeData } = await supabaseClient.from('store_info').select('*').limit(1);
                 if (storeData && storeData.length > 0) {
                     const s = storeData[0];
@@ -766,7 +752,6 @@
                         lineId: s.line_id || fallbackData.storeInfo.lineId, 
                         lineLink: s.line_link || fallbackData.storeInfo.lineLink,
                         fbLink: s.fb_link || fallbackData.storeInfo.fbLink || 'https://www.facebook.com/share/1Cha6DUTZU/',
-                        driveLink: s.drive_link || fallbackData.storeInfo.driveLink, 
                         hours: s.hours || fallbackData.storeInfo.hours, 
                         duration: s.duration || fallbackData.storeInfo.duration, 
                         logoImage: s.logo_image || ''
@@ -836,8 +821,6 @@
             } else {
                 fbBtn.classList.add('hidden');
             }
-            
-            document.getElementById('cv-driveBtn').href = info.driveLink || '#';
 
             const noticeEl = document.getElementById('cv-notices');
             if (appData.notices.length === 0) noticeEl.innerHTML = `<p class="text-center">ไม่มีประกาศในขณะนี้</p>`;
@@ -900,7 +883,6 @@
             document.getElementById('modalGameName').innerText = game.name;
             document.getElementById('modalReqType').innerText = category ? category.note : '';
             
-            // Large Image Preview at the top of modal if customIcon exists (NEW!)
             const largeImgContainer = document.getElementById('modalLargeImageContainer');
             const largeImg = document.getElementById('modalLargeImage');
             if (game.customIcon) {
@@ -910,9 +892,7 @@
                 largeImgContainer.classList.add('hidden');
             }
 
-            const warningEl = document.getElementById('modalStatusWarning'); 
-            const orderBtn = document.getElementById('modalOrderBtn'); 
-            const listEl = document.getElementById('packagesList');
+            const warningEl = document.getElementById('modalStatusWarning'); const orderBtn = document.getElementById('modalOrderBtn'); const listEl = document.getElementById('packagesList');
             
             if(game.status === 'closed') { warningEl.classList.remove('hidden'); orderBtn.classList.add('opacity-50', 'pointer-events-none'); } 
             else { warningEl.classList.add('hidden'); orderBtn.classList.remove('opacity-50', 'pointer-events-none'); orderBtn.href = appData.storeInfo.lineLink; }
@@ -933,7 +913,6 @@
             document.getElementById('gameModal').classList.remove('hidden');
         }
 
-        // --- ADMIN AUTH & DASHBOARD ---
         function toggleAdminLogin() { document.getElementById('adminEmail').value = ''; document.getElementById('adminPassword').value = ''; document.getElementById('loginErrorMsg').classList.add('hidden'); document.getElementById('adminLoginModal').classList.remove('hidden'); }
         
         async function handleSupabaseLogin() {
@@ -965,7 +944,6 @@
             document.getElementById('adm-lineId').value = info.lineId || ''; 
             document.getElementById('adm-lineLink').value = info.lineLink || ''; 
             document.getElementById('adm-fbLink').value = info.fbLink || 'https://www.facebook.com/share/1Cha6DUTZU/'; 
-            document.getElementById('adm-driveLink').value = info.driveLink || ''; 
             document.getElementById('adm-hours').value = info.hours || ''; 
             document.getElementById('adm-duration').value = info.duration || '';
             
@@ -994,12 +972,10 @@
                     tagline: document.getElementById('adm-tagline').value, 
                     line_id: document.getElementById('adm-lineId').value, 
                     line_link: document.getElementById('adm-lineLink').value, 
-                    drive_link: document.getElementById('adm-driveLink').value, 
                     hours: document.getElementById('adm-hours').value, 
                     duration: document.getElementById('adm-duration').value, 
                     logo_image: appData.storeInfo.logoImage 
                 };
-                
                 try { infoData.fb_link = fbUrl; } catch(e) {}
 
                 appData.storeInfo.fbLink = fbUrl;
